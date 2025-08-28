@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import AccordionQuestionBoolean from './accordion-question-boolean';
+import AccordionContent from './accordion-content';
 import { vi } from 'vitest';
 
 const mockData = [
@@ -14,28 +14,28 @@ const mockData = [
   }
 ];
 
-describe('AccordionQuestionBoolean', () => {
+describe('AccordionContent', () => {
   it('renders buttons', () => {
-    render(<AccordionQuestionBoolean data={mockData} handlePillClick={() => {}} />);
+    render(<AccordionContent data={mockData} updateFeatureScore={() => {}} />);
     expect(screen.getByText('Male at birth')).toBeInTheDocument();
     expect(screen.getByText('Female at birth')).toBeInTheDocument();
   });
 
-  it('calls handlePillClick when a button is clicked', async () => {
+  it('calls updateFeatureScore when a button is clicked', async () => {
     const user = userEvent.setup();
-    const handlePillClick = vi.fn();
+    const updateFeatureScore = vi.fn();
 
-    render(<AccordionQuestionBoolean data={mockData} handlePillClick={handlePillClick} />);
+    render(<AccordionContent data={mockData} updateFeatureScore={updateFeatureScore} />);
 
     const maleButton = screen.getByText('Male at birth');
     await user.click(maleButton);
 
-    expect(handlePillClick).toHaveBeenCalledTimes(1);
+    expect(updateFeatureScore).toHaveBeenCalledTimes(1);
   });
 
   it('handles multiple feature weights', async () => {
     const user = userEvent.setup();
-    const handlePillClick = vi.fn();
+    const updateFeatureScore = vi.fn();
 
     const multiFeatureData = [
       {
@@ -47,11 +47,11 @@ describe('AccordionQuestionBoolean', () => {
       }
     ];
 
-    render(<AccordionQuestionBoolean data={multiFeatureData} handlePillClick={handlePillClick} />);
+    render(<AccordionContent data={multiFeatureData} updateFeatureScore={updateFeatureScore} />);
     const button = screen.getByText('MultiFeature');
     await user.click(button);
 
-   	expect(handlePillClick).toHaveBeenCalledWith(
+   	expect(updateFeatureScore).toHaveBeenCalledWith(
   		"multifeature",          // id
   		[
     		{ id: "a", weight: 2, goalWeight: 1 },
@@ -63,14 +63,14 @@ describe('AccordionQuestionBoolean', () => {
 
 	it('toggles button click and unclick', async () => {
   const user = userEvent.setup();
-  const handlePillClick = vi.fn();
+  const updateFeatureScore = vi.fn();
 
-  render(<AccordionQuestionBoolean data={mockData} handlePillClick={handlePillClick} />);
+  render(<AccordionContent data={mockData} updateFeatureScore={updateFeatureScore} />);
   const maleButton = screen.getByText('Male at birth');
 
   // Click
   await user.click(maleButton);
-  expect(handlePillClick).toHaveBeenLastCalledWith(
+  expect(updateFeatureScore).toHaveBeenLastCalledWith(
     'male at birth',
     [{ id: 'male_length', weight: 3, goalWeight: 1 }],
     true
@@ -78,7 +78,7 @@ describe('AccordionQuestionBoolean', () => {
 
   // Click again to unclick
   await user.click(maleButton);
-  expect(handlePillClick).toHaveBeenLastCalledWith(
+  expect(updateFeatureScore).toHaveBeenLastCalledWith(
     'male at birth',
     [{ id: 'male_length', weight: 3, goalWeight: 1 }],
     false
@@ -87,9 +87,9 @@ describe('AccordionQuestionBoolean', () => {
 
 	it('locks related buttons when clicked', async () => {
   const user = userEvent.setup();
-  const handlePillClick = vi.fn();
+  const updateFeatureScore = vi.fn();
 
-  render(<AccordionQuestionBoolean data={mockData} handlePillClick={handlePillClick} />);
+  render(<AccordionContent data={mockData} updateFeatureScore={updateFeatureScore} />);
   const maleButton = screen.getByText('Male at birth');
   const femaleButton = screen.getByText('Female at birth');
 
@@ -108,9 +108,9 @@ describe('AccordionQuestionBoolean', () => {
 
 it('applies clicked styles via MUI classes', async () => {
     const user = userEvent.setup();
-    const handlePillClick = vi.fn();
+    const updateFeatureScore = vi.fn();
 
-    render(<AccordionQuestionBoolean data={mockData} handlePillClick={handlePillClick} />);
+    render(<AccordionContent data={mockData} updateFeatureScore={updateFeatureScore} />);
 
     const maleButton = screen.getByText('Male at birth');
 

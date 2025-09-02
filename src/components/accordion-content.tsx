@@ -39,7 +39,14 @@ const AccordionContent: React.FC<Props> = ({
     }, {});
 
   return (
-    <Box mb={2} display="flex" flexWrap="wrap" alignItems="center" gap={1}>
+    <Box
+      mb={2}
+      mt={2}
+      display="flex"
+      flexWrap="wrap"
+      alignItems="center"
+      gap={1}
+    >
       {data.data.map((x: AccordionDataItem) => {
         if (isGroup(x)) {
           // It's a group → use x.group and x.questions
@@ -63,11 +70,18 @@ const AccordionContent: React.FC<Props> = ({
           return (
             <Button
               key={itemKey}
-              variant={clickedButtons.has(itemKey) ? "outlined" : "contained"}
-              color={clickedButtons.has(itemKey) ? "success" : "primary"}
+              variant={"contained"}
               disabled={lockedButtons.has(itemKey)}
               onClick={() => handleClick(x.text, x.features)}
               {...(buildDataAttrs(x.features) as any)}
+              sx={{
+                backgroundColor: clickedButtons.has(itemKey)
+                  ? "#C7C2F0"
+                  : "#FCE5FC",
+                color: "#121212",
+                fontWeight: "700",
+                borderRadius: "20px",
+              }}
             >
               {x.text}
             </Button>

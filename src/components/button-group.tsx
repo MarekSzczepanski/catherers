@@ -16,7 +16,7 @@ const ButtonGroup = ({
   lockedButtons,
 }: Props) => {
   return (
-    <ToggleButtonGroup exclusive>
+    <ToggleButtonGroup exclusive sx={{ borderRadius: "20px", margin: "8px 0" }}>
       {data.map((opt) => {
         const isSelected = clickedButtons.has(opt.text.toLowerCase());
         const isLocked = lockedButtons.has(opt.text.toLowerCase());
@@ -29,8 +29,11 @@ const ButtonGroup = ({
             disabled={isLocked}
             onClick={() => handleClick(opt.text, opt.features)}
             sx={{
-              backgroundColor: isSelected ? "rgba(0,128,0,0.2)" : undefined,
-              borderColor: isSelected ? "green" : undefined,
+              backgroundColor: isSelected ? "#C7C2F0" : "#FCE5FC",
+              fontWeight: 700,
+              borderRadius: "20px",
+              border: "0 !important",
+              marginLeft: 0,
               "&:hover": {
                 backgroundColor: isSelected ? "rgba(0,128,0,0.3)" : undefined,
               },

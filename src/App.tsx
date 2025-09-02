@@ -1,158 +1,72 @@
 import "./App.css";
 import AccordionWrap from "./components/accordion-wrap";
-import type { Feature } from "./components/accordion-content";
-import React, { useState } from "react";
-import { Box, Typography, Button } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { Box, Typography } from "@mui/material";
+import type {
+  Feature,
+  AccordionSection,
+  AccordionDataItem,
+  Question,
+} from "./types";
+import SideButton from "./components/side-button";
+import { titles, accordionContent } from "./data";
 
 type Score = Record<string, number>;
 
-const titles = ["Safety & basics", "Known anatomy issues"];
+function collectClickedFeatures(
+  accordionContent: AccordionSection[],
+  clickedButtons: Set<string>
+): Feature[] {
+  const features: Feature[] = [];
 
-const dropdownValueTypes = {
-  type1: ["none", "mild", "moderate", "severe"],
-};
-const { type1 } = dropdownValueTypes;
-const accordionContent = [
-  [
-    {
-      text: "Male at birth",
-      features: [{ id: "male_length", weight: 3, goalWeight: 1 }],
-    },
-    {
-      text: "Female at birth",
-      features: [
-        { id: "female_length", weight: 3, goalWeight: 1 },
-        { id: "female_length_plus", weight: 2, goalWeight: 1 },
-      ],
-    },
-    {
-      text: "Has latex allergy",
-      features: [{ id: "red_rubber_latex", weight: -999, goalWeight: 1 }],
-    },
-    {
-      text: "Has neobladder",
-      features: [
-        { id: "open_ended", weight: 2, goalWeight: 1 },
-        { id: "wider_diameter", weight: 2, goalWeight: 1 },
-        { id: "microhole_eyelets", weight: -2, goalWeight: 1 },
-      ],
-    },
-  ],
-  [
-    {
-      text: "stricture",
-      features: [
-        { id: "tapered_tiemann_tip", weight: 2, goalWeight: 1 },
-        { id: "olive_flex_ergothan_tip", weight: 1, goalWeight: 1 },
-        { id: "more_rigid_core", weight: -1, goalWeight: 1 },
-      ],
-    },
-    {
-      text: "BPH",
-      features: [
-        { id: "tapered_tiemann_tip", weight: 2, goalWeight: 1 },
-        { id: "more_rigid_core", weight: 1, goalWeight: 1 },
-        { id: "straight_tip", weight: -2, goalWeight: 1 },
-      ],
-    },
-    {
-      text: "Pelvic prolapse",
-      features: [
-        { id: "tapered_tiemann_tip", weight: 1, goalWeight: 1 },
-        { id: "manual_lubrication", weight: 2, goalWeight: 1.1 },
-      ],
-    },
-    {
-      dropdown: type1,
-      text: "Obesity / Body habitus",
-      features: [
-        {
-          id: "female_length_plus",
-          requiredScale: 2,
-          weight: 2,
-          goalWeight: 1,
-        },
-      ],
-    },
-  ],
-  [
-    {
-      text: "stricture",
-      features: [
-        { id: "tapered_tiemann_tip", weight: 2, goalWeight: 1 },
-        { id: "olive_flex_ergothan_tip", weight: 1, goalWeight: 1 },
-        { id: "more_rigid_core", weight: -1, goalWeight: 1 },
-      ],
-    },
-    {
-      text: "BPH",
-      features: [
-        { id: "tapered_tiemann_tip", weight: 2, goalWeight: 1 },
-        { id: "more_rigid_core", weight: 1, goalWeight: 1 },
-        { id: "straight_tip", weight: -2, goalWeight: 1 },
-      ],
-    },
-    {
-      text: "Pelvic prolapse",
-      features: [
-        { id: "tapered_tiemann_tip", weight: 1, goalWeight: 1 },
-        { id: "manual_lubrication", weight: 2, goalWeight: 1.1 },
-      ],
-    },
-    {
-      dropdown: type1,
-      text: "Obesity / Body habitus",
-      features: [
-        {
-          id: "female_length_plus",
-          requiredScale: 2,
-          weight: 2,
-          goalWeight: 1,
-        },
-      ],
-    },
-  ],
-  [
-    {
-      text: "stricture",
-      features: [
-        { id: "tapered_tiemann_tip", weight: 2, goalWeight: 1 },
-        { id: "olive_flex_ergothan_tip", weight: 1, goalWeight: 1 },
-        { id: "more_rigid_core", weight: -1, goalWeight: 1 },
-      ],
-    },
-    {
-      text: "BPH",
-      features: [
-        { id: "tapered_tiemann_tip", weight: 2, goalWeight: 1 },
-        { id: "more_rigid_core", weight: 1, goalWeight: 1 },
-        { id: "straight_tip", weight: -2, goalWeight: 1 },
-      ],
-    },
-    {
-      text: "Pelvic prolapse",
-      features: [
-        { id: "tapered_tiemann_tip", weight: 1, goalWeight: 1 },
-        { id: "manual_lubrication", weight: 2, goalWeight: 1.1 },
-      ],
-    },
-    {
-      dropdown: type1,
-      text: "Obesity / Body habitus",
-      features: [
-        {
-          id: "female_length_plus",
-          requiredScale: 2,
-          weight: 2,
-          goalWeight: 1,
-        },
-      ],
-    },
-  ],
-];
+  const traverse = (items: AccordionDataItem[], parentGroup?: Question[]) => {
+    for (const item of items) {
+      if ("text" in item && clickedButtons.has(item.text.toLowerCase())) {
+        // Check requiredScale if parentGroup is defined
+        const filteredFeatures = item.features.filter((f) => {
+          if (f.requiredScale === undefined || !parentGroup) return true;
 
-/*{text: '', features: [{id: '', weight: , goalWeight: }]},
-, {id: '', weight: , goalWeight: }*/
+          // Find index of clicked item in its group
+          const index = parentGroup.findIndex(
+            (q) => q.text.toLowerCase() === item.text.toLowerCase()
+          );
+          return index >= f.requiredScale;
+        });
+
+        features.push(...filteredFeatures);
+      }
+
+      if ("questions" in item)
+        traverse(item.questions as AccordionDataItem[], item.questions);
+      if ("data" in item) traverse(item.data as AccordionDataItem[]);
+    }
+  };
+
+  traverse(accordionContent.flatMap((s) => s.data));
+
+  return features;
+}
+
+function calculateScore(
+  accordionContent: any[],
+  clickedButtons: Set<string>,
+  prevScore: Score
+): Score {
+  const features = collectClickedFeatures(accordionContent, clickedButtons);
+
+  // Reset scores
+  const newScore: Score = Object.fromEntries(
+    Object.keys(prevScore).map((key) => [key, 0])
+  ) as Score;
+
+  // Apply weights
+  for (const f of features) {
+    console.log(f, features, clickedButtons);
+    newScore[f.id] = (newScore[f.id] ?? 0) + f.weight;
+  }
+
+  return newScore;
+}
 
 function App() {
   const [score, setScore] = useState<Score>({
@@ -198,57 +112,59 @@ function App() {
 
   const lockRelations: Record<string, string[]> = {
     "male at birth": [
-      "female at birth",
       "pelvic prolapse",
-      "obesity / body habitus",
+      "obesity / body habitus: none",
+      "obesity / body habitus: mild",
+      "obesity / body habitus: moderate",
+      "obesity / body habitus: severe",
     ],
-    "female at birth": ["male at birth", "bph"],
+    "female at birth": ["bph"],
   };
 
-  const handleClick = (buttonText: string, features: Feature[]) => {
+  const handleClick = (buttonText: string) => {
     const buttonId = buttonText.toLowerCase();
     const isClicked = clickedButtons.has(buttonId);
-
     const newClicked = new Set(clickedButtons);
-    const newLocked = new Set(lockedButtons);
 
     if (isClicked) {
-      // unclick
       newClicked.delete(buttonId);
-      // unlock related
-      const toUnlock = lockRelations[buttonId] || [];
-      toUnlock.forEach((btn) => newLocked.delete(btn.toLowerCase()));
-      updateFeatureScore(buttonId, features, false);
     } else {
-      // click
       newClicked.add(buttonId);
-      // lock related
-      const toLock = lockRelations[buttonId] || [];
-      toLock.forEach((btn) => newLocked.add(btn.toLowerCase()));
-      updateFeatureScore(buttonId, features, true);
-    }
 
-    setClickedButtons(newClicked);
-    setLockedButtons(newLocked);
-  };
+      const matchedDataItem = accordionContent
+        .map((accordion) =>
+          accordion.data.find(
+            (z) =>
+              "questions" in z &&
+              z.questions?.some((y) => y.text.toLowerCase() === buttonId)
+          )
+        )
+        .find(Boolean); // filters out undefined
 
-  const updateFeatureScore = (
-    _id: string,
-    features: Feature[],
-    add: boolean
-  ) => {
-    setScore((prev) => {
-      const newScore = { ...prev };
-
-      features.forEach((f) => {
-        if (f.id in newScore) {
-          newScore[f.id] += add ? f.weight : -f.weight; // add or subtract based on toggle
+      // Safe traversal
+      (matchedDataItem?.questions ?? []).forEach((x) => {
+        const text = x.text.toLowerCase();
+        if (text !== buttonId) {
+          newClicked.delete(text);
         }
       });
+    }
 
-      return newScore;
-    });
+    const buttonsToLock = new Set(
+      Object.entries(lockRelations)
+        .filter(([prop]) => newClicked.has(prop))
+        .flatMap(([, vals]) => vals)
+    );
+
+    setClickedButtons(
+      new Set([...newClicked].filter((x) => !buttonsToLock.has(x)))
+    );
+    setLockedButtons(buttonsToLock);
   };
+
+  useEffect(() => {
+    setScore((prev) => calculateScore(accordionContent, clickedButtons, prev));
+  }, [clickedButtons]);
 
   return (
     <Box sx={{ display: "flex", minHeight: "100vh" }}>
@@ -276,19 +192,7 @@ function App() {
           }}
         >
           {/* Top button or content */}
-          <Button
-            variant="contained"
-            sx={{
-              backgroundColor: "#f9d7f9",
-              width: "100%",
-              aspectRatio: "1 / 1",
-              boxShadow: "none",
-              borderRadius: "22px",
-              "&:hover": {
-                backgroundColor: "#f8c5f8",
-              },
-            }}
-          ></Button>
+          <SideButton />
 
           {/* Middle content scrolls if needed */}
           <Box
@@ -309,32 +213,8 @@ function App() {
               mt: "auto", // push to bottom
             }}
           >
-            <Button
-              variant="contained"
-              sx={{
-                backgroundColor: "#f9d7f9",
-                width: "100%",
-                aspectRatio: "1 / 1",
-                boxShadow: "none",
-                borderRadius: "22px",
-                "&:hover": {
-                  backgroundColor: "#f8c5f8",
-                },
-              }}
-            ></Button>
-            <Button
-              variant="contained"
-              sx={{
-                backgroundColor: "#f9d7f9",
-                width: "100%",
-                aspectRatio: "1 / 1",
-                boxShadow: "none",
-                borderRadius: "22px",
-                "&:hover": {
-                  backgroundColor: "#f8c5f8",
-                },
-              }}
-            ></Button>
+            <SideButton />
+            <SideButton />
           </Box>
         </Box>
 
@@ -377,12 +257,12 @@ function App() {
               variant="h1"
               sx={{ fontSize: "80px", textAlign: "left" }}
             >
-              Catherer Selection Tool
+              Catheter Selection Tool
             </Typography>
             <Typography mt={2} sx={{ textAlign: "left" }}>
               The purpose of this prototype is to verify correct feature
               prioritization. Enter your medical attributes below, and a
-              prioritised catherer feature list will be calculated on the left.
+              prioritised cathetrer feature list will be calculated on the left.
             </Typography>
           </Box>
           <img
@@ -399,7 +279,6 @@ function App() {
           <AccordionWrap
             key={i}
             data={x}
-            updateFeatureScore={updateFeatureScore}
             handleClick={handleClick}
             clickedButtons={clickedButtons}
             lockedButtons={lockedButtons}

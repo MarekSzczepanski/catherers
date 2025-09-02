@@ -1,72 +1,37 @@
-import { useState } from "react";
 import { Box, Button } from "@mui/material";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
-import type { SelectChangeEvent } from "@mui/material/Select";
+import ButtonGroup from "./button-group";
+import type {
+  Feature,
+  AccordionSection,
+  AccordionDataItem,
+  Question,
+  Group,
+} from "../types";
 
-export interface Feature {
-  id: string;
-  weight: number;
-  goalWeight: number;
-  requiredScale?: number;
+function isGroup(item: AccordionDataItem): item is Group {
+  return "group" in item;
 }
 
-interface AccordionItem {
+export interface AccordionItem {
+  data: any;
   text: string;
   features: Feature[];
-  dropdown?: string[];
+  dropdown?: string[]; // optional: renders as button group if present
 }
 
-interface AccordionContentProps {
-  data: AccordionItem[];
-  updateFeatureScore: (id: string, features: Feature[], add: boolean) => void;
+interface Props {
+  data: AccordionSection;
   handleClick: (buttonText: string, features: Feature[]) => void;
   clickedButtons: Set<string>;
   lockedButtons: Set<string>;
 }
 
-const AccordionContent: React.FC<AccordionContentProps> = ({
+const AccordionContent: React.FC<Props> = ({
   data,
   handleClick,
   clickedButtons,
   lockedButtons,
-  updateFeatureScore,
 }) => {
-  // Store dropdown values per item
-  const [dropdownValues, setDropdownValues] = useState<Record<string, string>>(
-    {}
-  );
-
-  const handleChange = (event: SelectChangeEvent, itemKey: string) => {
-    const newValueStr = event.target.value;
-    if (newValueStr === "") return; // placeholder selected, do nothing
-
-    const newValue = Number(newValueStr);
-    const prevValue = dropdownValues[itemKey]
-      ? Number(dropdownValues[itemKey])
-      : 0;
-
-    setDropdownValues((prev) => ({
-      ...prev,
-      [itemKey]: newValueStr,
-    }));
-
-    const features =
-      data.find((x) => x.text.toLowerCase() === itemKey)?.features || [];
-
-    features.forEach((f) => {
-      if (f.requiredScale !== undefined) {
-        if (prevValue >= f.requiredScale && newValue < f.requiredScale) {
-          updateFeatureScore(itemKey, [f], false);
-        } else if (prevValue < f.requiredScale && newValue >= f.requiredScale) {
-          updateFeatureScore(itemKey, [f], true);
-        }
-      }
-    });
-  };
-
   const buildDataAttrs = (features: Feature[]) =>
     features.reduce((acc: Record<string, string>, f) => {
       acc[`data-${f.id}`] = String(f.weight);
@@ -75,60 +40,39 @@ const AccordionContent: React.FC<AccordionContentProps> = ({
 
   return (
     <Box mb={2} display="flex" flexWrap="wrap" alignItems="center" gap={1}>
-      {data.map((x) => {
-        const buttonId = x.text.toLowerCase();
-        const isLocked = lockedButtons.has(buttonId);
+      {data.data.map((x: AccordionDataItem) => {
+        if (isGroup(x)) {
+          // It's a group → use x.group and x.questions
+          return (
+            <ButtonGroup
+              data={x.questions.map((d: Question) => ({
+                value: d.text,
+                text: d.text,
+                features: d.features,
+                group: x.group,
+              }))}
+              handleClick={handleClick}
+              clickedButtons={clickedButtons}
+              lockedButtons={lockedButtons}
+            />
+          );
+        } else {
+          // It's a question → safe to use x.text and x.features
+          const itemKey = x.text.toLowerCase().trim();
 
-        return x.dropdown ? (
-          <FormControl sx={{ minWidth: 250 }}>
-            <InputLabel id={`${buttonId}-label`}>{x.text}</InputLabel>
-            <Select
-              labelId={`${buttonId}-label`}
-              id={`${buttonId}-select`}
-              value={dropdownValues[buttonId] || ""}
-              label={x.text}
-              onChange={(e) => handleChange(e, buttonId)}
+          return (
+            <Button
+              key={itemKey}
+              variant={clickedButtons.has(itemKey) ? "outlined" : "contained"}
+              color={clickedButtons.has(itemKey) ? "success" : "primary"}
+              disabled={lockedButtons.has(itemKey)}
+              onClick={() => handleClick(x.text, x.features)}
+              {...(buildDataAttrs(x.features) as any)}
             >
-              <MenuItem value="">
-                <em>Select...</em>
-              </MenuItem>
-              {x.dropdown.map((opt, i) => (
-                <MenuItem key={i} value={i.toString()}>
-                  {opt}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        ) : (
-          <Button
-            key={x.text}
-            variant={clickedButtons.has(buttonId) ? "outlined" : "contained"}
-            color={clickedButtons.has(buttonId) ? "success" : "primary"}
-            sx={{
-              minWidth: 120,
-              margin: 0,
-              height: 36,
-              borderColor: clickedButtons.has(buttonId) ? "green" : undefined,
-              "&:hover": {
-                borderColor: clickedButtons.has(buttonId)
-                  ? "darkgreen"
-                  : undefined,
-                backgroundColor: clickedButtons.has(buttonId)
-                  ? "rgba(0,128,0,0.3)"
-                  : undefined,
-              },
-              "&.Mui-disabled": {
-                backgroundColor: "gray",
-                color: "white",
-              },
-            }}
-            onClick={() => handleClick(x.text, x.features)}
-            disabled={isLocked}
-            {...(buildDataAttrs(x.features) as any)}
-          >
-            {x.text}
-          </Button>
-        );
+              {x.text}
+            </Button>
+          );
+        }
       })}
     </Box>
   );

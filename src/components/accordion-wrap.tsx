@@ -5,7 +5,15 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import AccordionContent from "./accordion-content";
 import { Typography } from "@mui/material";
 
-const AccordionWrap = (props: any) => {
+interface Props {
+  title: string;
+  data: any;
+  handleClick: any;
+  clickedButtons: Set<string>;
+  lockedButtons: Set<string>;
+}
+
+const AccordionWrap: React.FC<Props> = (props) => {
   return (
     <Accordion
       sx={{
@@ -29,9 +37,7 @@ const AccordionWrap = (props: any) => {
           backgroundColor: "#FCE5FC",
           borderRadius: "20px",
           border: "1px solid #F2B8F2",
-          "& .MuiAccordionSummary-content": {
-            alignItems: "center", // vertically center text
-          },
+          "& .MuiAccordionSummary-content": { alignItems: "center" },
         }}
       >
         <Typography component="span">{props.title}</Typography>
@@ -39,7 +45,6 @@ const AccordionWrap = (props: any) => {
       <AccordionDetails>
         <AccordionContent
           data={props.data}
-          updateFeatureScore={props.updateFeatureScore}
           handleClick={props.handleClick}
           clickedButtons={props.clickedButtons}
           lockedButtons={props.lockedButtons}

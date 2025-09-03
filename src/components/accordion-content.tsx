@@ -70,17 +70,30 @@ const AccordionContent: React.FC<Props> = ({
           return (
             <Button
               key={itemKey}
-              variant={"contained"}
+              variant="contained"
               disabled={lockedButtons.has(itemKey)}
               onClick={() => handleClick(x.text, x.features)}
               {...(buildDataAttrs(x.features) as any)}
               sx={{
+                padding: "16px",
+                width: "100%",
+                margin: "8px 0",
                 backgroundColor: clickedButtons.has(itemKey)
                   ? "#C7C2F0"
                   : "#FCE5FC",
                 color: "#121212",
-                fontWeight: "700",
-                borderRadius: "20px",
+                fontWeight: 700,
+                borderRadius: "25px",
+                boxShadow: 0,
+                fontSize: "12px",
+                textTransform: "none",
+                transition: "background-color 0.2s", // smooth transition
+                "&:hover": {
+                  backgroundColor: clickedButtons.has(itemKey)
+                    ? "#b2aed6" // same hover color as ToggleButton
+                    : "#F0D6F8", // slightly darker/lighter than #FCE5FC
+                  boxShadow: 0,
+                },
               }}
             >
               {x.text}

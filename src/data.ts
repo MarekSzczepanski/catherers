@@ -42,7 +42,7 @@ export const accordionContent = [
     accordionName: "Known anatomy issues",
     data: [
       {
-        text: "stricture",
+        text: "Stricture",
         features: [
           { id: "tapered_tiemann_tip", weight: 2, goalWeight: 1 },
           { id: "olive_flex_ergothan_tip", weight: 1, goalWeight: 1 },
@@ -67,7 +67,7 @@ export const accordionContent = [
       {
         group: "obesity",
         questions: type1.map((x) => ({
-          text: `Obesity / Body habitus: ${x}`,
+          text: `Obesity / body habitus: ${x}`,
           features: [
             {
               id: "female_length_plus",

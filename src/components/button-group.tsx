@@ -23,7 +23,12 @@ const ButtonGroup = ({
         margin: "8px 0",
         width: "100%",
         display: "flex",
-        backgroundColor: "#FCE5FC",
+        backgroundColor: data.some((opt) =>
+          lockedButtons.has(opt.text.toLowerCase())
+        )
+          ? "#d3d3d3" // background if any button is disabled
+          : "#F8F1F6", // default background
+        transition: "background-color 0.2s",
       }}
     >
       {data.map((opt, i) => {
@@ -45,18 +50,17 @@ const ButtonGroup = ({
             sx={{
               flex: 1, // <-- this makes each button take equal width
               padding: "16px",
-              backgroundColor: isSelected ? "#C7C2F0 !important" : "#FCE5FC",
-              color: "#121212",
-              fontWeight: 700,
-              fontSize: "12px",
+              backgroundColor: isSelected ? "#DCDAF5 !important" : "#F8F1F6",
+              color: "#1c1b1d",
+              fontWeight: isSelected ? 700 : 500,
+              fontSize: "14px",
               borderRadius: "25px !important",
               border: "0 !important",
               textTransform: "none",
               marginLeft: 0,
+              transition: "background-color 0.2s",
               "&:hover": {
-                backgroundColor: isSelected
-                  ? "#b2aed6 !important"
-                  : "rgba(0, 0, 0, 0.12)",
+                backgroundColor: isSelected ? "#9B96E2 !important" : "#E9D3E2",
               },
               "&::after": {
                 content: '""', // must be a string
@@ -65,7 +69,7 @@ const ButtonGroup = ({
                 backgroundColor:
                   isLast || isSelected || isNextSelected
                     ? "transparent"
-                    : "#C7C2F0",
+                    : "#DCDAF5",
                 zIndex: 2,
                 position: "absolute",
                 right: 0,
@@ -84,10 +88,14 @@ const ButtonGroup = ({
                 backgroundColor: "transparent",
               },
               "&:hover::before": {
-                backgroundColor: !i ? "transparent" : "#FCE5FC",
+                backgroundColor: !i ? "transparent" : "#F8F1F6",
               },
               "&::first-letter": {
                 textTransform: "uppercase", // only first character
+              },
+              "&.Mui-disabled": {
+                backgroundColor: "#d3d3d3 !important", // <-- change disabled bg here
+                color: "#888888", // optional: change text color
               },
             }}
           >

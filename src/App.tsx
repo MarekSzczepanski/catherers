@@ -9,6 +9,7 @@ import type {
   Question,
 } from "./types";
 import SideButton from "./components/side-button";
+import RoundButton from "./components/round-button";
 import { titles, accordionContent } from "./data";
 
 type Score = Record<string, number>;
@@ -173,22 +174,22 @@ function App() {
           position: "fixed", // keep fixed on scroll
           top: 0, // start from top
           left: 0, // align to left
-          width: "25%", // keep same width
+          width: "20%", // keep same width
           height: "100vh", // fill viewport height
-          backgroundColor: "#FCE5FC",
+          backgroundColor: "#F8F1F6",
           display: "flex",
           overflowY: "auto", // allow scrolling inside box if content overflows
         }}
       >
         <Box
           sx={{
-            width: "25%",
+            width: "35%",
             borderRight: "1px solid #ddd",
             display: "flex",
             flexDirection: "column",
             height: "calc(100vh - 32px)", // full viewport height
             minHeight: 0, // allow flex children to shrink
-            padding: 2,
+            alignItems: "center",
           }}
         >
           {/* Top button or content */}
@@ -209,12 +210,14 @@ function App() {
             sx={{
               display: "flex",
               flexDirection: "column",
-              gap: 2,
+              gap: 1,
               mt: "auto", // push to bottom
+              width: "100%",
+              alignItems: "center",
             }}
           >
-            <SideButton />
-            <SideButton />
+            <RoundButton imageName="reset" />
+            <RoundButton imageName="download" />
           </Box>
         </Box>
 
@@ -240,14 +243,14 @@ function App() {
           </Box>
         </Box>
       </Box>
-      <Box p={1} sx={{ marginLeft: "25%" }}>
+      <Box p={1} sx={{ marginLeft: "20%" }}>
         <Box mb={3} sx={{ display: "flex" }}>
           <Box
             p={4}
             sx={{
-              backgroundColor: "#FCE5FC",
+              backgroundColor: "#F8F1F6",
               borderRadius: "20px",
-              width: "65%",
+              width: "66%",
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",
@@ -255,7 +258,7 @@ function App() {
           >
             <Typography
               variant="h1"
-              sx={{ fontSize: "80px", textAlign: "left" }}
+              sx={{ fontSize: "80px", textAlign: "left", fontWeight: 600 }}
             >
               Catheter Selection Tool
             </Typography>
@@ -269,7 +272,7 @@ function App() {
             src="/blob.jpg"
             alt="image"
             style={{
-              maxWidth: "35%",
+              maxWidth: "33%",
               marginLeft: "8px",
               borderRadius: "20px",
             }}

@@ -17,7 +17,7 @@ const AccordionWrap: React.FC<Props> = (props) => {
   return (
     <Accordion
       sx={{
-        minHeight: 80,
+        minHeight: 66,
         marginTop: "8px",
         borderRadius: "20px !important",
         overflow: "hidden",
@@ -33,16 +33,23 @@ const AccordionWrap: React.FC<Props> = (props) => {
         aria-controls="panel1-content"
         id="panel1-header"
         sx={{
-          minHeight: 80,
-          backgroundColor: "#FCE5FC",
+          minHeight: 66,
+          backgroundColor: "#fafafa",
           borderRadius: "20px",
-          border: "1px solid #F2B8F2",
+          border: "1px solid #F5EDF3",
           "& .MuiAccordionSummary-content": { alignItems: "center" },
+          "&.Mui-expanded": {
+            backgroundColor: "#F8F1F6", // background when open
+          },
         }}
       >
         <Typography component="span">{props.title}</Typography>
       </AccordionSummary>
-      <AccordionDetails>
+      <AccordionDetails
+        sx={{
+          padding: "8px",
+        }}
+      >
         <AccordionContent
           data={props.data}
           handleClick={props.handleClick}

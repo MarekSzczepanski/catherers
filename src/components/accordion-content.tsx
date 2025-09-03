@@ -79,19 +79,19 @@ const AccordionContent: React.FC<Props> = ({
                 width: "100%",
                 margin: "8px 0",
                 backgroundColor: clickedButtons.has(itemKey)
-                  ? "#C7C2F0"
-                  : "#FCE5FC",
-                color: "#121212",
-                fontWeight: 700,
+                  ? "#DCDAF5"
+                  : "#F8F1F6",
+                color: "#1c1b1d",
+                fontWeight: clickedButtons.has(itemKey) ? 700 : 500,
                 borderRadius: "25px",
                 boxShadow: 0,
-                fontSize: "12px",
+                fontSize: "14px",
                 textTransform: "none",
                 transition: "background-color 0.2s", // smooth transition
                 "&:hover": {
                   backgroundColor: clickedButtons.has(itemKey)
-                    ? "#b2aed6" // same hover color as ToggleButton
-                    : "#F0D6F8", // slightly darker/lighter than #FCE5FC
+                    ? "#9B96E2" // same hover color as ToggleButton
+                    : "#E9D3E2", // slightly darker/lighter than #F8F1F6
                   boxShadow: 0,
                 },
               }}

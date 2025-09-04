@@ -16,7 +16,7 @@ export interface AccordionItem {
   data: any;
   text: string;
   features: Feature[];
-  dropdown?: string[]; // optional: renders as button group if present
+  dropdown?: string[];
 }
 
 interface Props {
@@ -38,6 +38,10 @@ const AccordionContent: React.FC<Props> = ({
       return acc;
     }, {});
 
+  // count how many "single" buttons there are
+  const singleButtons = data.data.filter((x) => !isGroup(x));
+  const singleCount = singleButtons.length;
+
   return (
     <Box
       mb={2}
@@ -45,13 +49,14 @@ const AccordionContent: React.FC<Props> = ({
       display="flex"
       flexWrap="wrap"
       alignItems="center"
+      justifyContent="space-between"
       gap={1}
     >
       {data.data.map((x: AccordionDataItem) => {
         if (isGroup(x)) {
-          // It's a group → use x.group and x.questions
           return (
             <ButtonGroup
+              key={x.group}
               data={x.questions.map((d: Question) => ({
                 value: d.text,
                 text: d.text,
@@ -64,7 +69,6 @@ const AccordionContent: React.FC<Props> = ({
             />
           );
         } else {
-          // It's a question → safe to use x.text and x.features
           const itemKey = x.text.toLowerCase().trim();
 
           return (
@@ -75,9 +79,9 @@ const AccordionContent: React.FC<Props> = ({
               onClick={() => handleClick(x.text, x.features)}
               {...(buildDataAttrs(x.features) as any)}
               sx={{
+                flex: `1 1 calc(${singleCount >= 3 ? "33.33%" : "50%"} - 8px)`,
+                maxWidth: `calc(${singleCount >= 3 ? "33.33%" : "50%"} - 8px)`,
                 padding: "16px",
-                width: "100%",
-                margin: "8px 0",
                 backgroundColor: clickedButtons.has(itemKey)
                   ? "#DCDAF5"
                   : "#F8F1F6",
@@ -87,11 +91,11 @@ const AccordionContent: React.FC<Props> = ({
                 boxShadow: 0,
                 fontSize: "14px",
                 textTransform: "none",
-                transition: "background-color 0.2s", // smooth transition
+                transition: "background-color 0.2s",
                 "&:hover": {
                   backgroundColor: clickedButtons.has(itemKey)
-                    ? "#9B96E2" // same hover color as ToggleButton
-                    : "#E9D3E2", // slightly darker/lighter than #F8F1F6
+                    ? "#9B96E2"
+                    : "#E9D3E2",
                   boxShadow: 0,
                 },
               }}

@@ -26,9 +26,15 @@ const ButtonGroup = ({
         backgroundColor: data.some((opt) =>
           lockedButtons.has(opt.text.toLowerCase())
         )
-          ? "#d3d3d3" // background if any button is disabled
-          : "#F8F1F6", // default background
+          ? "#d3d3d3"
+          : "#F8F1F6",
         transition: "background-color 0.2s",
+
+        // 👇 when group is hovered → affect all buttons
+        "&:hover .MuiToggleButton-root::after, &:hover .MuiToggleButton-root::before":
+          {
+            backgroundColor: "transparent",
+          },
       }}
     >
       {data.map((opt, i) => {
@@ -42,13 +48,14 @@ const ButtonGroup = ({
 
         return (
           <ToggleButton
-            key={opt.text} // use text instead of value
-            value={opt.text} // same here
+            key={opt.text}
+            value={opt.text}
             selected={isSelected}
             disabled={isLocked}
             onClick={() => handleClick(opt.text, opt.features)}
             sx={{
-              flex: 1, // <-- this makes each button take equal width
+              margin: "0px 1px",
+              flex: 1,
               padding: "16px",
               backgroundColor: isSelected ? "#DCDAF5 !important" : "#F8F1F6",
               color: "#1c1b1d",
@@ -57,45 +64,40 @@ const ButtonGroup = ({
               borderRadius: "25px !important",
               border: "0 !important",
               textTransform: "none",
-              marginLeft: 0,
+              position: "relative", // required for ::after/::before positioning
               transition: "background-color 0.2s",
               "&:hover": {
                 backgroundColor: isSelected ? "#9B96E2 !important" : "#E9D3E2",
               },
               "&::after": {
-                content: '""', // must be a string
+                content: '""',
                 width: "1px",
-                height: "100%",
+                height: "32px",
                 backgroundColor:
                   isLast || isSelected || isNextSelected
                     ? "transparent"
                     : "#DCDAF5",
-                zIndex: 2,
                 position: "absolute",
                 right: 0,
+                top: "50%",
+                transform: "translateY(-50%)",
                 transition: "background-color 0.2s",
               },
               "&::before": {
-                content: '""', // must be a string
+                content: '""',
                 width: "1px",
                 height: "100%",
-                zIndex: 3,
                 position: "absolute",
                 left: 0,
+                top: 0,
                 transition: "background-color 0.2s",
               },
-              "&:hover::after": {
-                backgroundColor: "transparent",
-              },
-              "&:hover::before": {
-                backgroundColor: !i ? "transparent" : "#F8F1F6",
-              },
               "&::first-letter": {
-                textTransform: "uppercase", // only first character
+                textTransform: "uppercase",
               },
               "&.Mui-disabled": {
-                backgroundColor: "#d3d3d3 !important", // <-- change disabled bg here
-                color: "#888888", // optional: change text color
+                backgroundColor: "#d3d3d3 !important",
+                color: "#888888",
               },
             }}
           >

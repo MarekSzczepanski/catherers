@@ -4,6 +4,7 @@ const RoundButton = (props: any) => {
   return (
     <Button
       variant="contained"
+      onClick={props.click}
       sx={{
         padding: 0,
         backgroundColor: "transparent",

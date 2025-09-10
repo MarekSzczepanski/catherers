@@ -202,6 +202,7 @@ function App() {
           <Box mt={5} sx={{ overflowWrap: "anywhere" }}>
             {Object.entries(score)
               .filter(([_, value]) => value > 0)
+              .sort((a, b) => b[1] - a[1])
               .map(([key, value]) => (
                 <Typography
                   key={key}

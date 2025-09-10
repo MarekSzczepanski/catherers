@@ -10,7 +10,7 @@ import type {
 } from "./types";
 import SideButton from "./components/side-button";
 import RoundButton from "./components/round-button";
-import { titles, accordionContent } from "./data";
+import { accordionContent } from "./data";
 
 type Score = Record<string, number>;
 
@@ -62,8 +62,7 @@ function calculateScore(
 
   // Apply weights
   for (const f of features) {
-    console.log(f, features, clickedButtons);
-    newScore[f.id] = (newScore[f.id] ?? 0) + f.weight;
+    newScore[f.id] = (newScore[f.id] ?? 0) + f.score;
   }
 
   return newScore;
@@ -145,12 +144,14 @@ function App() {
         .find(Boolean); // filters out undefined
 
       // Safe traversal
-      (matchedDataItem?.questions ?? []).forEach((x) => {
-        const text = x.text.toLowerCase();
-        if (text !== buttonId) {
-          newClicked.delete(text);
-        }
-      });
+      if (matchedDataItem && "questions" in matchedDataItem) {
+        (matchedDataItem.questions ?? []).forEach((x: Question) => {
+          const text = x.text.toLowerCase();
+          if (text !== buttonId) {
+            newClicked.delete(text);
+          }
+        });
+      }
     }
 
     const buttonsToLock = new Set(
@@ -235,7 +236,7 @@ function App() {
           <Typography variant="h2" sx={{ fontSize: "16px", fontWeight: 600 }}>
             Features
           </Typography>
-          <Box mt={5}>
+          <Box mt={5} sx={{ overflowWrap: "anywhere" }}>
             {Object.entries(score)
               .filter(([_, value]) => value > 0)
               .map(([key, value]) => (
@@ -243,7 +244,11 @@ function App() {
                   key={key}
                   sx={{
                     display: "flex",
-                    justifyContent: "space-between", // push content to edges
+                    justifyContent: "space-between",
+                    "& span": {
+                      whiteSpace: "nowrap",
+                      paddingLeft: "8px",
+                    },
                   }}
                 >
                   {key}
@@ -295,7 +300,7 @@ function App() {
             handleClick={handleClick}
             clickedButtons={clickedButtons}
             lockedButtons={lockedButtons}
-            title={`Q${i + 1}. ${titles[i]}`}
+            title={accordionContent[i].accordionName}
           />
         ))}
       </Box>

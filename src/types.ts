@@ -1,8 +1,9 @@
 export type Feature = {
   id: string;
-  weight: number;
-  goalWeight: number;
+  weight?: number;
+  goalWeight?: number;
   requiredScale?: number;
+  score: number;
 };
 
 export type Question = {

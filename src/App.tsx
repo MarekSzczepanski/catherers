@@ -68,44 +68,7 @@ function calculateScore(
   return newScore;
 }
 
-const initialScore = {
-  red_rubber_latex: 0,
-  pvc_core: 0,
-  silicone_core: 0,
-  tpe_core: 0,
-  pobe_core: 0,
-  pe_core: 0,
-  less_rigid_core: 0,
-  more_rigid_core: 0,
-  pre_lubricate: 0,
-  hydrophilic_coated: 0,
-  ias_coated: 0,
-  manual_lubrication: 0,
-  male_length: 0,
-  female_length: 0,
-  female_length_plus: 0,
-  smaller_diameter: 0,
-  wider_diameter: 0,
-  straight_tip: 0,
-  tapered_tiemann_tip: 0,
-  olive_flex_ergothan_tip: 0,
-  eyelets_2_4: 0,
-  microhole_eyelets: 0,
-  smoothed_eyelets: 0,
-  open_ended: 0,
-  sleeve_full: 0,
-  sleeve_partial: 0,
-  sleeve_bag: 0,
-  handle_lo_fric: 0,
-  funnel_connector: 0,
-  introducer_tip: 0,
-  stripe_marker: 0,
-  water_sachet_separate: 0,
-  compact_pocket_size: 0,
-  packaging_simple_medical: 0,
-  funnel_bag_compatible: 0,
-  closed_system_complete: 0,
-};
+const initialScore = {};
 
 function App() {
   const [score, setScore] = useState<Score>(initialScore);

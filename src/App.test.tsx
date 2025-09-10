@@ -16,8 +16,8 @@ describe("App", () => {
     const maleButton = screen.getByText("Male at birth");
     await user.click(maleButton);
 
-    // Check that the score for male_length is updated
-    expect(screen.getByText("male_length: 3")).toBeInTheDocument();
+    // Check that the score for Male Length is updated
+    expect(screen.getByText("Male Length: 3")).toBeInTheDocument();
   });
 
   it("toggles score when clicking the same button twice", async () => {
@@ -26,11 +26,11 @@ describe("App", () => {
 
     const maleButton = screen.getByText("Male at birth");
     await user.click(maleButton);
-    expect(screen.getByText("male_length: 3")).toBeInTheDocument();
+    expect(screen.getByText("Male Length: 3")).toBeInTheDocument();
 
     await user.click(maleButton);
     // Score should disappear after unclick
-    expect(screen.queryByText("male_length: 3")).toBeNull();
+    expect(screen.queryByText("Male Length: 3")).toBeNull();
   });
 });
 */

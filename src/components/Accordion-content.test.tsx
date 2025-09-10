@@ -6,7 +6,7 @@ import { vi } from "vitest";
 const mockData = [
   {
     text: "Male at birth",
-    features: [{ id: "male_length", weight: 3, goalWeight: 1 }],
+    features: [{ id: "Male Length", weight: 3, goalWeight: 1 }],
   },
 ];
 
@@ -105,7 +105,7 @@ describe("AccordionContent", () => {
     await user.click(maleButton);
     expect(updateFeatureScore).toHaveBeenLastCalledWith(
       "male at birth",
-      [{ id: "male_length", weight: 3, goalWeight: 1 }],
+      [{ id: "Male Length", weight: 3, goalWeight: 1 }],
       true
     );
 
@@ -113,7 +113,7 @@ describe("AccordionContent", () => {
     await user.click(maleButton);
     expect(updateFeatureScore).toHaveBeenLastCalledWith(
       "male at birth",
-      [{ id: "male_length", weight: 3, goalWeight: 1 }],
+      [{ id: "Male Length", weight: 3, goalWeight: 1 }],
       false
     );
   });

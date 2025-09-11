@@ -62,7 +62,17 @@ function calculateScore(
 
   // Apply weights
   for (const f of features) {
-    newScore[f.id] = (newScore[f.id] ?? 0) + f.score;
+    const assignNewScore = () =>
+      (newScore[f.id] = (newScore[f.id] ?? 0) + f.score);
+    const gate = f.gate;
+    if (gate) {
+      const isFemaleGate = gate === "F";
+      if (
+        (isFemaleGate && clickedButtons.has("female at birth")) ||
+        (!isFemaleGate && clickedButtons.has("male at birth"))
+      )
+        assignNewScore();
+    } else assignNewScore();
   }
 
   return newScore;

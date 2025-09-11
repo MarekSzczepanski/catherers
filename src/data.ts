@@ -15,18 +15,18 @@ export const accordionContent = [
           {
             text: "Male at birth",
             features: [
-              { id: "Male Length", score: 1198.8 },
-              { id: "Female Length", score: -1198.8 },
-              { id: "Female Length+", score: -1198.8 },
-              { id: "Handle", score: -1198.8 },
+              { id: "Male Length", score: 1198.8, gate: "M" },
+              { id: "Female Length", score: -1198.8, gate: "M" },
+              { id: "Female Length+", score: -1198.8, gate: "M" },
+              { id: "Handle", score: -1198.8, gate: "M" },
             ],
           },
           {
             text: "Female at birth",
             features: [
-              { id: "Female Length", score: 8.8 },
-              { id: "Female Length+", score: 3.6 },
-              { id: "Smaller Diameter", score: 0 }, //
+              { id: "Female Length", score: 8.8, gate: "F" },
+              { id: "Female Length+", score: 3.6, gate: "F" },
+              { id: "Smaller Diameter", score: 0, gate: "F" }, //
             ],
           },
         ],
@@ -59,12 +59,12 @@ export const accordionContent = [
       {
         text: "BPH",
         features: [
-          { id: "More Rigid Core", score: 5.7 },
-          { id: "Tapered / Tiemann tips", score: 3.6 },
-          { id: "Olice, Flex, Ergothan tips", score: 1.8 },
-          { id: "Stripe", score: 3.6 },
-          { id: "Straight tips", score: 0 }, //
-          { id: "Less Rigid Core", score: -1.8 },
+          { id: "More Rigid Core", score: 5.7, gate: "M" },
+          { id: "Tapered / Tiemann tips", score: 3.6, gate: "M" },
+          { id: "Olice, Flex, Ergothan tips", score: 1.8, gate: "M" },
+          { id: "Stripe", score: 3.6, gate: "M" },
+          { id: "Straight tips", score: 0, gate: "M" }, //
+          { id: "Less Rigid Core", score: -1.8, gate: "M" },
         ],
       },
       {
@@ -79,8 +79,8 @@ export const accordionContent = [
       {
         text: "Pelvic prolapse",
         features: [
-          { id: "More Rigid Core", score: 2.7 },
-          { id: "Less Rigid Core", score: 0 },
+          { id: "More Rigid Core", score: 2.7, gate: "F" },
+          { id: "Less Rigid Core", score: 0, gate: "F" },
         ],
       },
       /*{
@@ -131,7 +131,7 @@ export const accordionContent = [
       },
       {
         text: "Trouble fully draining (due to external anatomy)",
-        features: [{ id: "Female Length+", score: 1.2 }],
+        features: [{ id: "Female Length+", score: 1.2, gate: "F" }],
       },
       {
         group: "Sediment, mucus, or visible particles",
@@ -266,7 +266,7 @@ export const accordionContent = [
         questions: type1.map((x) => ({
           text: `Poor dexterity: ${x}`,
           features: [
-            { id: "Female Length+", requiredScale: 1, score: 0 }, //
+            { id: "Female Length+", requiredScale: 1, score: 0, gate: "F" }, //
             { id: "More Rigid Core", requiredScale: 1, score: 0 }, //
             { id: "Hydrophillic coated", requiredScale: 1, score: 0 }, //
             {
@@ -278,8 +278,8 @@ export const accordionContent = [
             { id: "Full sleeve", requiredScale: 1, score: 3.6 },
             { id: "Partial sleeve", requiredScale: 1, score: 1.8 },
             { id: "Manual lubrication", requiredScale: 1, score: -1.8 },
-            { id: "Female Length", requiredScale: 1, score: 0 }, //
-            { id: "Handle", requiredScale: 1, score: 0 }, //
+            { id: "Female Length", requiredScale: 1, score: 0, gate: "F" }, //
+            { id: "Handle", requiredScale: 1, score: 0, gate: "F" }, //
             { id: "Introducer tips", requiredScale: 1, score: 0 }, //
             { id: "Separate water sachet", requiredScale: 1, score: 0 }, //
             { id: "Compact or pocket size", requiredScale: 1, score: 0 }, //
@@ -289,17 +289,17 @@ export const accordionContent = [
       {
         text: "Wheelchair use (female)",
         features: [
-          { id: "Male Length", score: 1.8 },
-          { id: "Complete/closed system", score: 1.8 },
+          { id: "Male Length", score: 1.8, gate: "F" },
+          { id: "Complete/closed system", score: 1.8, gate: "F" },
         ],
       },
       {
         text: "Wheelchair use (male)",
-        features: [{ id: "Complete/closed system", score: 1.8 }],
+        features: [{ id: "Complete/closed system", score: 1.8, gate: "M" }],
       },
       {
         text: "Trouble reaching genitals",
-        features: [{ id: "Male Length", score: 1.2 }],
+        features: [{ id: "Male Length", score: 1.2, gate: "F" }],
       },
     ],
   },

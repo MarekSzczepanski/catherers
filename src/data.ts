@@ -25,7 +25,7 @@ export const accordionContent = [
             text: "Female at birth",
             features: [
               { id: "Female Length", score: 8.8 },
-              { id: "Female Length+", score: 4.8 },
+              { id: "Female Length+", score: 3.6 },
               { id: "Smaller Diameter", score: 0 }, //
             ],
           },
@@ -51,35 +51,35 @@ export const accordionContent = [
       {
         text: "Stricture",
         features: [
-          { id: "Less Rigid Core", score: 1.2 },
-          { id: "More Rigid Core", score: 3.6 },
-          { id: "Wider diameter", score: 3.6 },
+          { id: "Less Rigid Core", score: -1.8 },
+          { id: "More Rigid Core", score: 1.8 },
+          { id: "Wider diameter", score: 1.8 },
         ],
       },
       {
         text: "BPH",
         features: [
-          { id: "More Rigid Core", score: 11.4 },
-          { id: "Tapered / Tiemann tips", score: 4.8 },
-          { id: "Olice, Flex, Ergothan tips", score: 3.6 },
-          { id: "Stripe", score: 4.8 },
+          { id: "More Rigid Core", score: 5.7 },
+          { id: "Tapered / Tiemann tips", score: 3.6 },
+          { id: "Olice, Flex, Ergothan tips", score: 1.8 },
+          { id: "Stripe", score: 3.6 },
           { id: "Straight tips", score: 0 }, //
-          { id: "Less Rigid Core", score: 1.2 },
+          { id: "Less Rigid Core", score: -1.8 },
         ],
       },
       {
         text: "Tortuous urethra",
         features: [
-          { id: "More Rigid Core", score: 3.6 },
-          { id: "Olice, Flex, Ergothan tips", score: 3.6 },
-          { id: "Tapered / Tiemann tips", score: 0.9 },
-          { id: "Less Rigid Core", score: 1.2 },
+          { id: "More Rigid Core", score: 1.8 },
+          { id: "Olice, Flex, Ergothan tips", score: 2.7 },
+          { id: "Tapered / Tiemann tips", score: -1.35 },
+          { id: "Less Rigid Core", score: -1.8 },
         ],
       },
       {
         text: "Pelvic prolapse",
         features: [
-          { id: "More Rigid Core", score: 3.6 },
+          { id: "More Rigid Core", score: 2.7 },
           { id: "Less Rigid Core", score: 0 },
         ],
       },
@@ -107,38 +107,38 @@ export const accordionContent = [
         questions: type2.map((x) => ({
           text: `Recurrent UTIs: ${x}`,
           features: [
-            { id: "Bag sleeve", requiredScale: 1, score: 9 },
-            { id: "Introducer tips", requiredScale: 1, score: 16 },
+            { id: "Bag sleeve", requiredScale: 1, score: 4.5 },
+            { id: "Introducer tips", requiredScale: 1, score: 12 },
             { id: "Pre-lubricate", requiredScale: 1, score: 0 }, //
-            { id: "Hydrophillic coated", requiredScale: 1, score: 16 },
+            { id: "Hydrophillic coated", requiredScale: 1, score: 12 },
             {
               id: "IAS (integrated ampiphillic surfactant)",
               requiredScale: 1,
-              score: 12,
+              score: 6,
             },
-            { id: "2-4 eyelets", requiredScale: 1, score: 8 },
-            { id: "Complete/closed system", requiredScale: 2, score: 16 },
-            { id: "Full sleeve", requiredScale: 1, score: 9 },
-            { id: "Partial sleeve", requiredScale: 1, score: 9 },
-            { id: "Manual lubrication", requiredScale: 1, score: 4 },
+            { id: "2-4 eyelets", requiredScale: 1, score: 0 }, //
+            { id: "Complete/closed system", requiredScale: 2, score: 12 },
+            { id: "Full sleeve", requiredScale: 1, score: 4.5 },
+            { id: "Partial sleeve", requiredScale: 1, score: 4.5 },
+            { id: "Manual lubrication", requiredScale: 1, score: -6 },
             { id: "Microhole eyelets", requiredScale: 1, score: 0 }, //
           ],
         })),
       },
       {
         text: "Immunosupression",
-        features: [{ id: "Complete/closed system", score: 16 }],
+        features: [{ id: "Complete/closed system", score: 12 }],
       },
       {
         text: "Trouble fully draining (due to external anatomy)",
-        features: [{ id: "Female Length+", score: 2.4 }],
+        features: [{ id: "Female Length+", score: 1.2 }],
       },
       {
         group: "Sediment, mucus, or visible particles",
         questions: type3.map((x) => ({
           text: `Sediment, mucus, or visible particles: ${x}`,
           features: [
-            { id: "2-4 eyelets", requiredScale: 1, score: 4.48 },
+            { id: "2-4 eyelets", requiredScale: 1, score: 3.36 },
             { id: "Microhole eyelets", requiredScale: 1, score: -839.16 },
           ],
         })),
@@ -148,8 +148,8 @@ export const accordionContent = [
         questions: type1.map((x) => ({
           text: `Incomplete emptying: ${x}`,
           features: [
-            { id: "Microhole eyelets", requiredScale: 1, score: 1.2 },
-            { id: "2-4 eyelets", requiredScale: 1, score: 1.2 },
+            { id: "Microhole eyelets", requiredScale: 1, score: 0.6 },
+            { id: "2-4 eyelets", requiredScale: 1, score: 0.6 },
           ],
         })),
       },
@@ -167,15 +167,23 @@ export const accordionContent = [
       },
       {
         text: "Early SCI",
-        features: [
-          { id: "Microhole eyelets", score: 0 }, //
-        ],
+        features: [{ id: "Microhole eyelets", score: -10 }],
       },
       {
         text: "Neuropathic bladder",
         features: [
           { id: "2-4 eyelets", score: 0 }, //
         ],
+      },
+      {
+        group: "Reduced sensitivity",
+        questions: type1.map((x) => ({
+          text: `Reduced sensitivity: ${x}`,
+          features: [
+            { id: "Stripe", requiredScale: 1, score: 1.8 },
+            { id: "Tapered / Tiemann tips", requiredScale: 1, score: 0 }, //
+          ],
+        })),
       },
     ],
   },
@@ -187,20 +195,20 @@ export const accordionContent = [
         questions: type1.map((x) => ({
           text: `Pain/discomfort: ${x}`,
           features: [
-            { id: "Less Rigid Core", requiredScale: 1, score: 7.2 },
-            { id: "Hydrophillic coated", requiredScale: 1, score: 7.2 },
+            { id: "Less Rigid Core", requiredScale: 1, score: 3.6 },
+            { id: "Hydrophillic coated", requiredScale: 1, score: 3.6 },
             {
               id: "IAS (integrated ampiphillic surfactant)",
               requiredScale: 1,
-              score: 7.2,
+              score: 3.6,
             },
-            { id: "Smaller Diameter", requiredScale: 1, score: 4.8 },
-            { id: "Smoothed eyelets", requiredScale: 1, score: 9.6 },
-            { id: "More Rigid Core", requiredScale: 1, score: 2.4 },
-            { id: "Pre-lubricate", requiredScale: 1, score: 4.8 },
-            { id: "Manual lubrication", requiredScale: 1, score: 4.8 },
-            { id: "Wider diameter", requiredScale: 1, score: 4.8 },
-            { id: "2-4 eyelets", requiredScale: 1, score: 4.8 },
+            { id: "Smaller Diameter", requiredScale: 1, score: 0 }, //
+            { id: "Smoothed eyelets", requiredScale: 1, score: 7.2 },
+            { id: "More Rigid Core", requiredScale: 1, score: -3.6 },
+            { id: "Pre-lubricate", requiredScale: 1, score: 0 }, //
+            { id: "Manual lubrication", requiredScale: 1, score: 0 }, //
+            { id: "Wider diameter", requiredScale: 1, score: 0 }, //
+            { id: "2-4 eyelets", requiredScale: 1, score: 0 }, //
           ],
         })),
       },
@@ -212,7 +220,7 @@ export const accordionContent = [
             {
               id: "IAS (integrated ampiphillic surfactant)",
               requiredScale: 1,
-              score: 12.8,
+              score: 9.6,
             },
             { id: "Hydrophillic coated", requiredScale: 1, score: 0 }, //
           ],
@@ -223,18 +231,18 @@ export const accordionContent = [
         questions: type1.map((x) => ({
           text: `Bleeding: ${x}`,
           features: [
-            { id: "Smoothed eyelets", requiredScale: 1, score: 12.8 },
-            { id: "Less Rigid Core", requiredScale: 1, score: 9.6 },
-            { id: "Hydrophillic coated", requiredScale: 1, score: 9.6 },
+            { id: "Smoothed eyelets", requiredScale: 1, score: 9.6 },
+            { id: "Less Rigid Core", requiredScale: 1, score: 4.8 },
+            { id: "Hydrophillic coated", requiredScale: 1, score: 4.8 },
             {
               id: "IAS (integrated ampiphillic surfactant)",
               requiredScale: 1,
-              score: 12.8,
+              score: 9.6,
             },
-            { id: "More Rigid Core", requiredScale: 1, score: 3.2 },
-            { id: "Pre-lubricate", requiredScale: 1, score: 6.4 },
-            { id: "2-4 eyelets", requiredScale: 1, score: 12.8 },
-            { id: "Microhole eyelets", requiredScale: 1, score: 6.4 },
+            { id: "More Rigid Core", requiredScale: 1, score: -4.8 },
+            { id: "Pre-lubricate", requiredScale: 1, score: 0 }, //
+            { id: "2-4 eyelets", requiredScale: 1, score: 9.6 },
+            { id: "Microhole eyelets", requiredScale: 1, score: 0 }, //
           ],
         })),
       },
@@ -258,40 +266,40 @@ export const accordionContent = [
         questions: type1.map((x) => ({
           text: `Poor dexterity: ${x}`,
           features: [
-            { id: "Female Length+", requiredScale: 1, score: 2.4 },
-            { id: "More Rigid Core", requiredScale: 1, score: 2.4 },
-            { id: "Hydrophillic coated", requiredScale: 1, score: 2.4 },
+            { id: "Female Length+", requiredScale: 1, score: 0 }, //
+            { id: "More Rigid Core", requiredScale: 1, score: 0 }, //
+            { id: "Hydrophillic coated", requiredScale: 1, score: 0 }, //
             {
               id: "IAS (integrated ampiphillic surfactant)",
               requiredScale: 1,
-              score: 2.4,
+              score: 0, //
             },
-            { id: "Pre-lubricate", requiredScale: 1, score: 3.6 },
-            { id: "Full sleeve", requiredScale: 1, score: 4.8 },
-            { id: "Partial sleeve", requiredScale: 1, score: 3.6 },
-            { id: "Manual lubrication", requiredScale: 1, score: 1.2 },
-            { id: "Female Length", requiredScale: 1, score: 2.4 },
-            { id: "Handle", requiredScale: 1, score: 2.4 },
-            { id: "Introducer tips", requiredScale: 1, score: 2.4 },
-            { id: "Separate water sachet", requiredScale: 1, score: 2.4 },
-            { id: "Compact or pocket size", requiredScale: 1, score: 2.4 },
+            { id: "Pre-lubricate", requiredScale: 1, score: 1.8 },
+            { id: "Full sleeve", requiredScale: 1, score: 3.6 },
+            { id: "Partial sleeve", requiredScale: 1, score: 1.8 },
+            { id: "Manual lubrication", requiredScale: 1, score: -1.8 },
+            { id: "Female Length", requiredScale: 1, score: 0 }, //
+            { id: "Handle", requiredScale: 1, score: 0 }, //
+            { id: "Introducer tips", requiredScale: 1, score: 0 }, //
+            { id: "Separate water sachet", requiredScale: 1, score: 0 }, //
+            { id: "Compact or pocket size", requiredScale: 1, score: 0 }, //
           ],
         })),
       },
       {
         text: "Wheelchair use (female)",
         features: [
-          { id: "Male Length", score: 3.6 },
-          { id: "Complete/closed system", score: 3.6 },
+          { id: "Male Length", score: 1.8 },
+          { id: "Complete/closed system", score: 1.8 },
         ],
       },
       {
         text: "Wheelchair use (male)",
-        features: [{ id: "Complete/closed system", score: 3.6 }],
+        features: [{ id: "Complete/closed system", score: 1.8 }],
       },
       {
         text: "Trouble reaching genitals",
-        features: [{ id: "Male Length", score: 2.4 }],
+        features: [{ id: "Male Length", score: 1.2 }],
       },
     ],
   },
@@ -301,29 +309,29 @@ export const accordionContent = [
       {
         text: "Active / on the go",
         features: [
-          { id: "Compact or pocket size", score: 1.6 },
-          { id: "Pre-lubricate", score: 12.6 },
-          { id: "Hydrophillic coated", score: 12.6 },
-          { id: "IAS (integrated ampiphillic surfactant)", score: 12.6 },
-          { id: "Full sleeve", score: 18.4 },
-          { id: "Manual lubrication", score: 4.6 },
+          { id: "Compact or pocket size", score: 1.2 },
+          { id: "Pre-lubricate", score: 6.3 },
+          { id: "Hydrophillic coated", score: 6.3 },
+          { id: "IAS (integrated ampiphillic surfactant)", score: 6.3 },
+          { id: "Full sleeve", score: 13.8 },
+          { id: "Manual lubrication", score: -6.9 },
         ],
       },
       {
         text: "Discretion",
         features: [
-          { id: "Female Length", score: 1.6, gate: "F" },
-          { id: "Female Length+", score: 1.6, gate: "F" },
-          { id: "Compact or pocket size", score: 1.6, gate: "F" },
-          { id: "Simple packaging (medical)", score: 0.4 },
-          { id: "Complete/closed system", score: 0.4 },
+          { id: "Female Length", score: 1.2, gate: "F" },
+          { id: "Female Length+", score: 1.2, gate: "F" },
+          { id: "Compact or pocket size", score: 1.2, gate: "F" },
+          { id: "Simple packaging (medical)", score: -0.6 },
+          { id: "Complete/closed system", score: -0.6 },
         ],
       },
       {
         text: "Convenience",
         features: [
-          { id: "Compact or pocket size", score: 1.2 },
-          { id: "Funnel bag compatability", score: 3.6 },
+          { id: "Compact or pocket size", score: 0.6 },
+          { id: "Funnel bag compatability", score: 1.8 },
         ],
       },
     ],

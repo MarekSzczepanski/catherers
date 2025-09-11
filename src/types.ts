@@ -1,5 +1,7 @@
 export type Feature = {
   id: string;
+  weight?: number; // currently unused
+  goalWeight?: number; // currently unused
   requiredScale?: number;
   score: number;
   gate?: string;

@@ -92,8 +92,11 @@ function App() {
       "obesity / body habitus: mild",
       "obesity / body habitus: moderate",
       "obesity / body habitus: severe",
+      "wheelchair use (female)",
+      "trouble reaching genitals",
+      "trouble fully draining (due to external anatomy)",
     ],
-    "female at birth": ["bph"],
+    "female at birth": ["bph", "wheelchair use (male)"],
   };
 
   const handleClick = (buttonText: string) => {

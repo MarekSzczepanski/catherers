@@ -213,34 +213,46 @@ function App() {
             Features
           </Typography>
           <Box mt={5} sx={{ overflowWrap: "anywhere" }}>
-            {Object.entries(score)
-              .filter(([_, value]) => value)
-              .sort((a, b) => b[1] - a[1])
-              .map(([key, value], index, arr) => {
-                // Find index of first negative
-                const firstNegativeIndex = arr.findIndex(([_, v]) => v < 0);
-                const isNegative = value < 0;
-                const isFirstNegative = index === firstNegativeIndex;
+            <Box mt={5} sx={{ overflowWrap: "anywhere" }}>
+              <Box mt={5} sx={{ overflowWrap: "anywhere" }}>
+                {Object.entries(score)
+                  .filter(([_, value]) => value)
+                  .sort((a, b) => b[1] - a[1])
+                  .map(([key, value], index, arr) => {
+                    const firstNegativeIndex = arr.findIndex(([_, v]) => v < 0);
+                    const isNegative = value < 0;
+                    const isFirstNegative = index === firstNegativeIndex;
+                    const isHigh = value >= 100;
 
-                return (
-                  <Typography
-                    key={key}
-                    sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      color: isNegative ? "red" : "inherit",
-                      mt: isFirstNegative ? 4 : 0, // add space above first negative
-                      "& span": {
-                        whiteSpace: "nowrap",
-                        paddingLeft: "8px",
-                      },
-                    }}
-                  >
-                    {key}
-                    <span>{value as React.ReactNode}</span>
-                  </Typography>
-                );
-              })}
+                    return (
+                      <Typography
+                        key={key}
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          color: isNegative
+                            ? "red"
+                            : isHigh
+                            ? "#79AC78"
+                            : "inherit",
+                          mt: isFirstNegative ? 2 : 0,
+                          "& span": {
+                            whiteSpace: "nowrap",
+                            paddingLeft: "8px",
+                          },
+                        }}
+                      >
+                        {key}
+                        <span>
+                          {isHigh
+                            ? "Required"
+                            : (value.toFixed(2) as React.ReactNode)}
+                        </span>
+                      </Typography>
+                    );
+                  })}
+              </Box>
+            </Box>
           </Box>
         </Box>
       </Box>

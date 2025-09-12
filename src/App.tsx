@@ -252,7 +252,7 @@ function App() {
                           {isHigh ? (
                             <b>Required</b>
                           ) : isVeryNegative ? (
-                            <b>Avoid</b>
+                            <b>CI</b>
                           ) : (
                             (value.toFixed(1) as React.ReactNode)
                           )}

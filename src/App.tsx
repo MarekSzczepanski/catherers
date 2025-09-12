@@ -214,24 +214,33 @@ function App() {
           </Typography>
           <Box mt={5} sx={{ overflowWrap: "anywhere" }}>
             {Object.entries(score)
-              .filter(([_, value]) => value > 0)
+              .filter(([_, value]) => value)
               .sort((a, b) => b[1] - a[1])
-              .map(([key, value]) => (
-                <Typography
-                  key={key}
-                  sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    "& span": {
-                      whiteSpace: "nowrap",
-                      paddingLeft: "8px",
-                    },
-                  }}
-                >
-                  {key}
-                  <span>{value as React.ReactNode}</span>
-                </Typography>
-              ))}
+              .map(([key, value], index, arr) => {
+                // Find index of first negative
+                const firstNegativeIndex = arr.findIndex(([_, v]) => v < 0);
+                const isNegative = value < 0;
+                const isFirstNegative = index === firstNegativeIndex;
+
+                return (
+                  <Typography
+                    key={key}
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      color: isNegative ? "red" : "inherit",
+                      mt: isFirstNegative ? 4 : 0, // add space above first negative
+                      "& span": {
+                        whiteSpace: "nowrap",
+                        paddingLeft: "8px",
+                      },
+                    }}
+                  >
+                    {key}
+                    <span>{value as React.ReactNode}</span>
+                  </Typography>
+                );
+              })}
           </Box>
         </Box>
       </Box>

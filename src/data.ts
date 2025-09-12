@@ -83,6 +83,10 @@ export const accordionContent = [
           { id: "Less Rigid Core", score: 0, gate: "F" },
         ],
       },
+      {
+        text: "False passage",
+        features: [{ id: "More Rigid Core", score: 1.8 }],
+      },
       /*{
         group: "obesity",
         questions: type1.map((x) => ({
@@ -252,16 +256,6 @@ export const accordionContent = [
     accordionName: "Q6 — Dexterity, cognition & support",
     data: [
       {
-        text: "First time or inexperienced",
-        features: [
-          { id: "Less Rigid Core", score: 0 }, //
-          { id: "Microhole eyelets", score: 0 }, //
-          { id: "More Rigid Core", score: 0 }, //
-          { id: "Partial sleeve", score: 0 }, //
-          { id: "Introducer tips", score: 0 }, //
-        ],
-      },
-      {
         group: "Poor dexterity",
         questions: type1.map((x) => ({
           text: `Poor dexterity: ${x}`,
@@ -300,6 +294,16 @@ export const accordionContent = [
       {
         text: "Trouble reaching genitals",
         features: [{ id: "Male Length", score: 1.2, gate: "F" }],
+      },
+      {
+        text: "First time or inexperienced",
+        features: [
+          { id: "Less Rigid Core", score: 0 }, //
+          { id: "Microhole eyelets", score: 0 }, //
+          { id: "More Rigid Core", score: 0 }, //
+          { id: "Partial sleeve", score: 0 }, //
+          { id: "Introducer tips", score: 0 }, //
+        ],
       },
     ],
   },

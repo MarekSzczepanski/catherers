@@ -49,7 +49,7 @@ const AccordionContent: React.FC<Props> = ({
       display="flex"
       flexWrap="wrap"
       alignItems="center"
-      justifyContent="space-between"
+      justifyContent="flex-start"
       gap={1}
     >
       {data.data.map((x: AccordionDataItem) => {

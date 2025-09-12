@@ -54,6 +54,7 @@ const ButtonGroup = ({
             disabled={isLocked}
             onClick={() => handleClick(opt.text, opt.features)}
             sx={{
+              display: opt.text.includes("none") ? "none" : "block",
               margin: "0px 1px",
               flex: 1,
               padding: "16px",

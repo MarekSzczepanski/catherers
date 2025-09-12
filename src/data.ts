@@ -308,7 +308,7 @@ export const accordionContent = [
     ],
   },
   {
-    accordionName: "Q9 — Lifestyle, constraints & environment",
+    accordionName: "Q7 — Lifestyle, constraints & environment",
     data: [
       {
         text: "Active / on the go",

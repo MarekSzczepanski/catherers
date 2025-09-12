@@ -214,7 +214,7 @@ function App() {
           </Typography>
           <Box mt={5} sx={{ overflowWrap: "anywhere" }}>
             <Box mt={5} sx={{ overflowWrap: "anywhere" }}>
-              <Box mt={5} sx={{ overflowWrap: "anywhere" }}>
+              <Box mt={5} pb={2} sx={{ overflowWrap: "anywhere" }}>
                 {Object.entries(score)
                   .filter(([_, value]) => value)
                   .sort((a, b) => b[1] - a[1])
@@ -223,15 +223,20 @@ function App() {
                     const isNegative = value < 0;
                     const isFirstNegative = index === firstNegativeIndex;
                     const isHigh = value >= 100;
+                    const isVeryNegative = value <= -100;
 
                     return (
                       <Typography
                         key={key}
                         sx={{
+                          padding: "2px 0",
+                          fontSize: "13px",
                           display: "flex",
                           justifyContent: "space-between",
-                          color: isNegative
-                            ? "red"
+                          color: isVeryNegative
+                            ? "crimson" // keep crimson for avoid
+                            : isNegative
+                            ? "crimson"
                             : isHigh
                             ? "#79AC78"
                             : "inherit",
@@ -244,9 +249,13 @@ function App() {
                       >
                         {key}
                         <span>
-                          {isHigh
-                            ? "Required"
-                            : (value.toFixed(2) as React.ReactNode)}
+                          {isHigh ? (
+                            <b>Required</b>
+                          ) : isVeryNegative ? (
+                            <b>Avoid</b>
+                          ) : (
+                            (value.toFixed(1) as React.ReactNode)
+                          )}
                         </span>
                       </Typography>
                     );

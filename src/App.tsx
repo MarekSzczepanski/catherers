@@ -213,18 +213,42 @@ function App() {
             Features
           </Typography>
           <Box mt={5} sx={{ overflowWrap: "anywhere" }}>
-            <Box mt={5} sx={{ overflowWrap: "anywhere" }}>
-              <Box mt={5} pb={2} sx={{ overflowWrap: "anywhere" }}>
-                {Object.entries(score)
-                  .filter(([_, value]) => value)
-                  .sort((a, b) => b[1] - a[1])
-                  .map(([key, value], index, arr) => {
-                    const firstNegativeIndex = arr.findIndex(([_, v]) => v < 0);
-                    const isNegative = value < 0;
-                    const isFirstNegative = index === firstNegativeIndex;
-                    const isHigh = value >= 100;
-                    const isVeryNegative = value <= -100;
+            <Box mt={5} pb={2} sx={{ overflowWrap: "anywhere" }}>
+              {/* Positive & Neutral results */}
+              {Object.entries(score)
+                .filter(([_, value]) => value >= 0)
+                .sort((a, b) => b[1] - a[1])
+                .map(([key, value]) => {
+                  const isHigh = value >= 100;
+                  return (
+                    <Typography
+                      key={key}
+                      sx={{
+                        padding: "2px 0",
+                        fontSize: "13px",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        color: isHigh ? "#79AC78" : "inherit",
+                        "& span": {
+                          whiteSpace: "nowrap",
+                          paddingLeft: "8px",
+                        },
+                      }}
+                    >
+                      {key}
+                      <span>{isHigh ? <b>Required</b> : value.toFixed(1)}</span>
+                    </Typography>
+                  );
+                })}
 
+              {/* Negative results in separate div */}
+              <Box mt={8}>
+                {Object.entries(score)
+                  .filter(([_, value]) => value < 0)
+                  // sort by absolute value descending
+                  .sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]))
+                  .map(([key, value]) => {
+                    const isVeryNegative = value <= -100;
                     return (
                       <Typography
                         key={key}
@@ -233,14 +257,7 @@ function App() {
                           fontSize: "13px",
                           display: "flex",
                           justifyContent: "space-between",
-                          color: isVeryNegative
-                            ? "crimson" // keep crimson for avoid
-                            : isNegative
-                            ? "crimson"
-                            : isHigh
-                            ? "#79AC78"
-                            : "inherit",
-                          mt: isFirstNegative ? 2 : 0,
+                          color: "crimson",
                           "& span": {
                             whiteSpace: "nowrap",
                             paddingLeft: "8px",
@@ -249,12 +266,10 @@ function App() {
                       >
                         {key}
                         <span>
-                          {isHigh ? (
-                            <b>Required</b>
-                          ) : isVeryNegative ? (
+                          {isVeryNegative ? (
                             <b>CI</b>
                           ) : (
-                            (value.toFixed(1) as React.ReactNode)
+                            Math.abs(value).toFixed(1)
                           )}
                         </span>
                       </Typography>

@@ -1,7 +1,15 @@
 import "./App.css";
 import AccordionWrap from "./components/accordion-wrap";
-import React, { useState, useEffect } from "react";
-import { Box, Typography } from "@mui/material";
+import { useState, useEffect } from "react";
+import {
+  Box,
+  Typography,
+  Modal,
+  Paper,
+  IconButton,
+  Tabs,
+  Tab,
+} from "@mui/material";
 import type {
   Feature,
   AccordionSection,
@@ -11,6 +19,7 @@ import type {
 import SideButton from "./components/side-button";
 import RoundButton from "./components/round-button";
 import { accordionContent } from "./data";
+import CloseIcon from "@mui/icons-material/Close";
 
 type Score = Record<string, number>;
 
@@ -31,7 +40,7 @@ function collectClickedFeatures(
           const index = parentGroup.findIndex(
             (q) => q.text.toLowerCase() === item.text.toLowerCase()
           );
-          return index >= f.requiredScale;
+          return index >= Number(f.requiredScale);
         });
 
         features.push(...filteredFeatures);
@@ -51,7 +60,8 @@ function collectClickedFeatures(
 function calculateScore(
   accordionContent: any[],
   clickedButtons: Set<string>,
-  prevScore: Score
+  prevScore: Score,
+  recommendations: { label: string; weight: number }[]
 ): Score {
   const features = collectClickedFeatures(accordionContent, clickedButtons);
 
@@ -62,17 +72,24 @@ function calculateScore(
 
   // Apply weights
   for (const f of features) {
-    const assignNewScore = () =>
-      (newScore[f.id] = (newScore[f.id] ?? 0) + f.score);
+    const assignNewScore = () => {
+      const weightObj = recommendations.find((r) => r.label === f.weight);
+      const weightValue = weightObj ? weightObj.weight : 0;
+      newScore[f.id] = (newScore[f.id] ?? 0) + weightValue;
+    };
+
     const gate = f.gate;
     if (gate) {
       const isFemaleGate = gate === "F";
       if (
         (isFemaleGate && clickedButtons.has("female at birth")) ||
         (!isFemaleGate && clickedButtons.has("male at birth"))
-      )
+      ) {
         assignNewScore();
-    } else assignNewScore();
+      }
+    } else {
+      assignNewScore();
+    }
   }
 
   return newScore;
@@ -84,6 +101,22 @@ function App() {
   const [score, setScore] = useState<Score>(initialScore);
   const [clickedButtons, setClickedButtons] = useState<Set<string>>(new Set());
   const [lockedButtons, setLockedButtons] = useState<Set<string>>(new Set());
+  const [modal, setModal] = useState<boolean>(false);
+  const [tabIndex, setTabIndex] = useState(0);
+  const [recommendations, setRecommendations] = useState([
+    { label: "Require", weight: 999 },
+    { label: "Strongly prefer", weight: 3 },
+    { label: "Prefer", weight: 1.5 },
+    { label: "Neutral", weight: 0 },
+    { label: "Avoid", weight: -1.5 },
+    { label: "Strongly avoid", weight: -2.5 },
+    { label: "Contraindicated", weight: -999 },
+  ]);
+
+  // temporary edits live here
+  const [draftRecommendations, setDraftRecommendations] = useState<
+    { label: string; weight: number }[]
+  >([]);
 
   const lockRelations: Record<string, string[]> = {
     "male at birth": [
@@ -143,8 +176,10 @@ function App() {
   };
 
   useEffect(() => {
-    setScore((prev) => calculateScore(accordionContent, clickedButtons, prev));
-  }, [clickedButtons]);
+    setScore((prev) =>
+      calculateScore(accordionContent, clickedButtons, prev, recommendations)
+    );
+  }, [clickedButtons, recommendations]);
 
   const handleReset = () => {
     setScore(initialScore);
@@ -153,6 +188,11 @@ function App() {
   };
 
   const handleDownload = () => {};
+
+  const handleWeightEdit = () => {
+    setDraftRecommendations(recommendations.map((r) => ({ ...r }))); // clone
+    setModal(true);
+  };
 
   return (
     <Box sx={{ display: "flex", minHeight: "100vh" }}>
@@ -203,6 +243,7 @@ function App() {
               alignItems: "center",
             }}
           >
+            <RoundButton imageName="home" click={handleWeightEdit} />
             <RoundButton imageName="reset" click={handleReset} />
             <RoundButton imageName="download" click={handleDownload} />
           </Box>
@@ -216,7 +257,7 @@ function App() {
             <Box mt={5} pb={2} sx={{ overflowWrap: "anywhere" }}>
               {/* Positive & Neutral results */}
               {Object.entries(score)
-                .filter(([_, value]) => value >= 0)
+                .filter(([_, value]) => value > 0) // only show positive non-zero
                 .sort((a, b) => b[1] - a[1])
                 .map(([key, value]) => {
                   const isHigh = value >= 100;
@@ -241,11 +282,10 @@ function App() {
                   );
                 })}
 
-              {/* Negative results in separate div */}
               <Box mt={8}>
                 {Object.entries(score)
-                  .filter(([_, value]) => value < 0)
-                  // sort by absolute value descending
+                  .filter(([_, value]) => value < 0) // only negative
+                  .filter(([_, value]) => value !== 0) // skip zero
                   .sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]))
                   .map(([key, value]) => {
                     const isVeryNegative = value <= -100;
@@ -266,11 +306,7 @@ function App() {
                       >
                         {key}
                         <span>
-                          {isVeryNegative ? (
-                            <b>CI</b>
-                          ) : (
-                            Math.abs(value).toFixed(1)
-                          )}
+                          {isVeryNegative ? <b>CI</b> : value.toFixed(1)}
                         </span>
                       </Typography>
                     );
@@ -325,6 +361,152 @@ function App() {
             title={accordionContent[i].accordionName}
           />
         ))}
+      </Box>
+      <Box>
+        <Modal
+          open={modal}
+          onClose={() => setModal(false)}
+          aria-labelledby="weight-edit-modal-title"
+          aria-describedby="weight-edit-modal-description"
+        >
+          <Paper
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: 600,
+              maxHeight: "80vh",
+              borderRadius: 4,
+              boxShadow: 24,
+              p: 3,
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            {/* Header with close button */}
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <Typography
+                id="weight-edit-modal-title"
+                variant="h6"
+                fontWeight="600"
+              >
+                Edit Weights
+              </Typography>
+              <IconButton onClick={() => setModal(false)}>
+                <CloseIcon />
+              </IconButton>
+            </Box>
+
+            {/* Tabs */}
+            <Tabs
+              value={tabIndex}
+              onChange={(_, newValue) => setTabIndex(newValue)}
+              sx={{ mt: 2, borderBottom: 1, borderColor: "divider" }}
+            >
+              <Tab label="Recommendations" />
+              <Tab label="Clinical Priority" />
+              <Tab label="Goal ID" />
+            </Tabs>
+
+            {/* Tab panels */}
+            <Box sx={{ flex: 1, overflowY: "auto", mt: 2 }}>
+              {tabIndex === 0 && (
+                <Typography>
+                  {tabIndex === 0 && (
+                    <Box>
+                      <table
+                        style={{ width: "100%", borderCollapse: "collapse" }}
+                      >
+                        <thead>
+                          <tr>
+                            <th style={{ textAlign: "left", padding: "8px" }}>
+                              Recommendation
+                            </th>
+                            <th style={{ textAlign: "left", padding: "8px" }}>
+                              Weight
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {draftRecommendations.map((row, index) => (
+                            <tr key={row.label}>
+                              <td style={{ padding: "8px" }}>{row.label}</td>
+                              <td style={{ padding: "8px" }}>
+                                <input
+                                  type="number"
+                                  value={row.weight}
+                                  onChange={(e) => {
+                                    const raw = e.target.value;
+
+                                    // allow user to type "-" without instantly breaking parseFloat
+                                    const newValue =
+                                      raw === "" || raw === "-"
+                                        ? raw
+                                        : parseFloat(raw);
+
+                                    setDraftRecommendations((prev) =>
+                                      prev.map((r, i) =>
+                                        i === index
+                                          ? { ...r, weight: newValue as number }
+                                          : r
+                                      )
+                                    );
+                                  }}
+                                  style={{
+                                    width: "100px",
+                                    padding: "4px",
+                                    borderRadius: "4px",
+                                    border: "1px solid #ccc",
+                                  }}
+                                />
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </Box>
+                  )}
+                </Typography>
+              )}
+              {tabIndex === 1 && <Typography>Text 2</Typography>}
+              {tabIndex === 2 && <Typography>Text 3</Typography>}
+            </Box>
+
+            {/* Footer */}
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "flex-end",
+                mt: 3,
+                gap: 2,
+              }}
+            >
+              <button onClick={() => setModal(false)}>Cancel</button>
+              <button
+                onClick={() => {
+                  setRecommendations(draftRecommendations); // commit changes
+                  setModal(false);
+                }}
+                style={{
+                  background: "#6a1b9a",
+                  color: "white",
+                  padding: "6px 16px",
+                  borderRadius: "8px",
+                  border: "none",
+                }}
+              >
+                Recalculate
+              </button>
+            </Box>
+          </Paper>
+        </Modal>
       </Box>
     </Box>
   );

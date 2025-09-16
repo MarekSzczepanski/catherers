@@ -21,7 +21,7 @@ export interface AccordionItem {
 
 interface Props {
   data: AccordionSection;
-  handleClick: (buttonText: string, features: Feature[]) => void;
+  handleClick: (buttonText: string) => void;
   clickedButtons: Set<string>;
   lockedButtons: Set<string>;
 }
@@ -32,8 +32,8 @@ const AccordionContent: React.FC<Props> = ({
   clickedButtons,
   lockedButtons,
 }) => {
-  const buildDataAttrs = (features: Feature[]) =>
-    features.reduce((acc: Record<string, string>, f) => {
+  const buildDataAttrs = (features: /*Feature[]*/ any) =>
+    features.reduce((acc: Record<string, string>, f: any) => {
       acc[`data-${f.id}`] = String(f.weight);
       return acc;
     }, {});
@@ -76,8 +76,8 @@ const AccordionContent: React.FC<Props> = ({
               key={itemKey}
               variant="contained"
               disabled={lockedButtons.has(itemKey)}
-              onClick={() => handleClick(x.text, x.features)}
-              {...(buildDataAttrs(x.features) as any)}
+              onClick={() => handleClick(x.text)}
+              {...buildDataAttrs(x.features)}
               sx={{
                 flex: `1 1 calc(${singleCount >= 3 ? "33.33%" : "50%"} - 8px)`,
                 maxWidth: `calc(${singleCount >= 3 ? "33.33%" : "50%"} - 8px)`,

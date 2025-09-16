@@ -15,6 +15,7 @@ import type {
   AccordionSection,
   AccordionDataItem,
   Question,
+  MultipleFeatures,
 } from "./types";
 import SideButton from "./components/side-button";
 import RoundButton from "./components/round-button";
@@ -26,14 +27,14 @@ type Score = Record<string, number>;
 function collectClickedFeatures(
   accordionContent: AccordionSection[],
   clickedButtons: Set<string>
-): Feature[] {
-  const features: Feature[] = [];
+): (Feature | MultipleFeatures)[] {
+  const features: (Feature | MultipleFeatures)[] = [];
 
   const traverse = (items: AccordionDataItem[], parentGroup?: Question[]) => {
     for (const item of items) {
       if ("text" in item && clickedButtons.has(item.text.toLowerCase())) {
         // Check requiredScale if parentGroup is defined
-        const filteredFeatures = item.features.filter((f) => {
+        const filteredFeatures = item.features.filter((f: any) => {
           if (f.requiredScale === undefined || !parentGroup) return true;
 
           // Find index of clicked item in its group
@@ -61,21 +62,77 @@ function calculateScore(
   accordionContent: any[],
   clickedButtons: Set<string>,
   prevScore: Score,
-  recommendations: { label: string; weight: number }[]
+  recommendations: { label: string; weight: number }[],
+  clinicalPriority: { label: string; priorityWeight: number }[],
+  goals: { label: string; goalWeight: number }[]
 ): Score {
   const features = collectClickedFeatures(accordionContent, clickedButtons);
-
   // Reset scores
   const newScore: Score = Object.fromEntries(
     Object.keys(prevScore).map((key) => [key, 0])
   ) as Score;
 
   // Apply weights
-  for (const f of features) {
+  for (const f of features as any) {
     const assignNewScore = () => {
-      const weightObj = recommendations.find((r) => r.label === f.weight);
-      const weightValue = weightObj ? weightObj.weight : 0;
-      newScore[f.id] = (newScore[f.id] ?? 0) + weightValue;
+      if (f.isMultipleRow) {
+        const data = f.data;
+        let highest = 0;
+        const nonHighestRowsValues = [];
+        for (const x of data) {
+          const recommendationsObj = recommendations.find(
+            (r) => r.label === x.weight
+          );
+          const recommendationsValue = recommendationsObj
+            ? recommendationsObj.weight
+            : 0;
+          const clinicalPriorityObj = clinicalPriority.find(
+            (r) => r.label === x.priorityWeight
+          );
+          const clinicalPriorityValue = clinicalPriorityObj
+            ? clinicalPriorityObj.priorityWeight
+            : 0;
+
+          const goalsObj = goals.find((r) => r.label === x.goalWeight);
+          const goalsValue = goalsObj ? goalsObj.goalWeight : 0;
+
+          const result =
+            recommendationsValue * clinicalPriorityValue * goalsValue;
+          if (x.isHighest) {
+            highest = result;
+          } else {
+            nonHighestRowsValues.push(result);
+            console.log(recommendationsObj);
+          }
+        }
+        const nonHighestSum = nonHighestRowsValues.reduce(
+          (accumulator, currentValue) => {
+            return accumulator + currentValue;
+          },
+          0
+        );
+        const finalResult = highest + nonHighestSum * 0.5;
+        newScore[f.data[0].id] = (newScore[f.data[0].id] ?? 0) + finalResult;
+        console.log(highest, nonHighestRowsValues);
+      } else {
+        const recommendationsObj = recommendations.find(
+          (r) => r.label === f.weight
+        );
+        const recommendationsValue = recommendationsObj
+          ? recommendationsObj.weight
+          : 0;
+        const clinicalPriorityObj = clinicalPriority.find(
+          (r) => r.label === f.priorityWeight
+        );
+        const clinicalPriorityValue = clinicalPriorityObj
+          ? clinicalPriorityObj.priorityWeight
+          : 0;
+        const goalsObj = goals.find((r) => r.label === f.goalWeight);
+        const goalsValue = goalsObj ? goalsObj.goalWeight : 0;
+        newScore[f.id] =
+          (newScore[f.id] ?? 0) +
+          recommendationsValue * clinicalPriorityValue * goalsValue;
+      }
     };
 
     const gate = f.gate;
@@ -96,6 +153,35 @@ function calculateScore(
 }
 
 const initialScore = {};
+const initialRecommendations = [
+  { label: "Require", weight: 999 },
+  { label: "Strongly prefer", weight: 3 },
+  { label: "Prefer", weight: 1.5 },
+  { label: "Neutral", weight: 0 },
+  { label: "Avoid", weight: -1.5 },
+  { label: "Strongly avoid", weight: -2.5 },
+  { label: "Contraindicated", weight: -999 },
+];
+const initialClinicalPriority = [
+  { label: "Critical_safety", priorityWeight: 1.2 },
+  { label: "High_clinical_effectiveness", priorityWeight: 1.1 },
+  { label: "Medium_comfort_easeofuse", priorityWeight: 0.45 },
+  { label: "Low_convenience_lifestyle", priorityWeight: 0.4 },
+];
+const initialGoals = [
+  { label: "infection_risk_reduction", goalWeight: 5 },
+  { label: "trauma_minimization", goalWeight: 4 },
+  { label: "ease_of_use_dexterity", goalWeight: 2 },
+  { label: "navigation_difficult_anatomy", goalWeight: 1.5 },
+  { label: "debris_management", goalWeight: 1.4 },
+  { label: "discretion_portability", goalWeight: 1 },
+  { label: "cost_containment", goalWeight: 1 },
+  { label: "sustainability", goalWeight: 1 },
+  { label: "training_measurement", goalWeight: 1 },
+  { label: "anatomical_fit", goalWeight: 1 },
+  { label: "general_clinical_benefit", goalWeight: 1 },
+  { label: "Improved_drainage", goalWeight: 1 },
+];
 
 function App() {
   const [score, setScore] = useState<Score>(initialScore);
@@ -103,19 +189,23 @@ function App() {
   const [lockedButtons, setLockedButtons] = useState<Set<string>>(new Set());
   const [modal, setModal] = useState<boolean>(false);
   const [tabIndex, setTabIndex] = useState(0);
-  const [recommendations, setRecommendations] = useState([
-    { label: "Require", weight: 999 },
-    { label: "Strongly prefer", weight: 3 },
-    { label: "Prefer", weight: 1.5 },
-    { label: "Neutral", weight: 0 },
-    { label: "Avoid", weight: -1.5 },
-    { label: "Strongly avoid", weight: -2.5 },
-    { label: "Contraindicated", weight: -999 },
-  ]);
+  const [recommendations, setRecommendations] = useState(
+    initialRecommendations
+  );
+  const [clinicalPriority, setClinicalPriority] = useState(
+    initialClinicalPriority
+  );
+  const [goals, setGoals] = useState(initialGoals);
 
   // temporary edits live here
   const [draftRecommendations, setDraftRecommendations] = useState<
     { label: string; weight: number }[]
+  >([]);
+  const [draftClinicalPriority, setDraftClinicalPriority] = useState<
+    { label: string; priorityWeight: number }[]
+  >([]);
+  const [draftGoals, setDraftGoals] = useState<
+    { label: string; goalWeight: number }[]
   >([]);
 
   const lockRelations: Record<string, string[]> = {
@@ -177,12 +267,22 @@ function App() {
 
   useEffect(() => {
     setScore((prev) =>
-      calculateScore(accordionContent, clickedButtons, prev, recommendations)
+      calculateScore(
+        accordionContent,
+        clickedButtons,
+        prev,
+        recommendations,
+        clinicalPriority,
+        goals
+      )
     );
-  }, [clickedButtons, recommendations]);
+  }, [clickedButtons, recommendations, clinicalPriority, goals]);
 
   const handleReset = () => {
     setScore(initialScore);
+    setRecommendations(initialRecommendations);
+    setClinicalPriority(initialClinicalPriority);
+    setGoals(initialGoals);
     setClickedButtons(new Set());
     setLockedButtons(new Set());
   };
@@ -191,6 +291,8 @@ function App() {
 
   const handleWeightEdit = () => {
     setDraftRecommendations(recommendations.map((r) => ({ ...r }))); // clone
+    setDraftClinicalPriority(clinicalPriority.map((r) => ({ ...r }))); // clone
+    setDraftGoals(goals.map((r) => ({ ...r }))); // clone
     setModal(true);
   };
 
@@ -411,8 +513,8 @@ function App() {
               sx={{ mt: 2, borderBottom: 1, borderColor: "divider" }}
             >
               <Tab label="Recommendations" />
-              <Tab label="Clinical Priority" />
               <Tab label="Goal ID" />
+              <Tab label="Clinical Priority" />
             </Tabs>
 
             {/* Tab panels */}
@@ -475,8 +577,129 @@ function App() {
                   )}
                 </Typography>
               )}
-              {tabIndex === 1 && <Typography>Text 2</Typography>}
-              {tabIndex === 2 && <Typography>Text 3</Typography>}
+              {tabIndex === 1 && (
+                <Typography>
+                  {tabIndex === 1 && (
+                    <Box>
+                      <table
+                        style={{ width: "100%", borderCollapse: "collapse" }}
+                      >
+                        <thead>
+                          <tr>
+                            <th style={{ textAlign: "left", padding: "8px" }}>
+                              Goal ID
+                            </th>
+                            <th style={{ textAlign: "left", padding: "8px" }}>
+                              Goal Weight
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {draftGoals.map((row, index) => (
+                            <tr key={row.label}>
+                              <td style={{ padding: "8px" }}>{row.label}</td>
+                              <td style={{ padding: "8px" }}>
+                                <input
+                                  type="number"
+                                  value={row.goalWeight}
+                                  onChange={(e) => {
+                                    const raw = e.target.value;
+
+                                    // allow user to type "-" without instantly breaking parseFloat
+                                    const newValue =
+                                      raw === "" || raw === "-"
+                                        ? raw
+                                        : parseFloat(raw);
+
+                                    setDraftGoals((prev) =>
+                                      prev.map((r, i) =>
+                                        i === index
+                                          ? {
+                                              ...r,
+                                              goalWeight: newValue as number,
+                                            }
+                                          : r
+                                      )
+                                    );
+                                  }}
+                                  style={{
+                                    width: "100px",
+                                    padding: "4px",
+                                    borderRadius: "4px",
+                                    border: "1px solid #ccc",
+                                  }}
+                                />
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </Box>
+                  )}
+                </Typography>
+              )}
+              {tabIndex === 2 && (
+                <Typography>
+                  {tabIndex === 2 && (
+                    <Box>
+                      <table
+                        style={{ width: "100%", borderCollapse: "collapse" }}
+                      >
+                        <thead>
+                          <tr>
+                            <th style={{ textAlign: "left", padding: "8px" }}>
+                              Clinical Priority
+                            </th>
+                            <th style={{ textAlign: "left", padding: "8px" }}>
+                              Priority Weight
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {draftClinicalPriority.map((row, index) => (
+                            <tr key={row.label}>
+                              <td style={{ padding: "8px" }}>{row.label}</td>
+                              <td style={{ padding: "8px" }}>
+                                <input
+                                  type="number"
+                                  value={row.priorityWeight}
+                                  onChange={(e) => {
+                                    const raw = e.target.value;
+
+                                    // allow user to type "-" without instantly breaking parseFloat
+                                    const newValue =
+                                      raw === "" || raw === "-"
+                                        ? raw
+                                        : parseFloat(raw);
+
+                                    setDraftClinicalPriority((prev) =>
+                                      prev.map((r, i) =>
+                                        i === index
+                                          ? {
+                                              ...r,
+                                              priorityWeight:
+                                                newValue as number,
+                                            }
+                                          : r
+                                      )
+                                    );
+                                  }}
+                                  style={{
+                                    width: "100px",
+                                    padding: "4px",
+                                    borderRadius: "4px",
+                                    border: "1px solid #ccc",
+                                  }}
+                                />
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </Box>
+                  )}
+                </Typography>
+              )}
             </Box>
 
             {/* Footer */}
@@ -492,6 +715,8 @@ function App() {
               <button
                 onClick={() => {
                   setRecommendations(draftRecommendations); // commit changes
+                  setClinicalPriority(draftClinicalPriority);
+                  setGoals(draftGoals);
                   setModal(false);
                 }}
                 style={{

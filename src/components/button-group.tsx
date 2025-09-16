@@ -1,10 +1,10 @@
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-import type { Feature, Question } from "../types";
+import type { Question } from "../types";
 
 type Props = {
   data: Question[];
-  handleClick: (text: string, features: Feature[]) => void;
+  handleClick: (text: string) => void;
   clickedButtons: Set<string>;
   lockedButtons: Set<string>;
 };
@@ -52,7 +52,7 @@ const ButtonGroup = ({
             value={opt.text}
             selected={isSelected}
             disabled={isLocked}
-            onClick={() => handleClick(opt.text, opt.features)}
+            onClick={() => handleClick(opt.text)}
             sx={{
               display: opt.text.includes("none") ? "none" : "block",
               margin: "0px 1px",

@@ -488,12 +488,13 @@ function App() {
               left: "50%",
               transform: "translate(-50%, -50%)",
               width: 600,
-              maxHeight: "80vh",
+              height: "75vh",
               borderRadius: 4,
               boxShadow: 24,
-              p: 3,
+              padding: "75px",
               display: "flex",
               flexDirection: "column",
+              transition: "height 0.2s ease",
             }}
           >
             {/* Header with close button */}
@@ -511,7 +512,15 @@ function App() {
               >
                 Edit Weights
               </Typography>
-              <IconButton onClick={() => setModal(false)}>
+              <IconButton
+                sx={{
+                  transform: "translateX(12px)",
+                  "&:hover": {
+                    paddingRight: "8px",
+                  },
+                }}
+                onClick={() => setModal(false)}
+              >
                 <CloseIcon />
               </IconButton>
             </Box>
@@ -520,28 +529,67 @@ function App() {
             <Tabs
               value={tabIndex}
               onChange={(_, newValue) => setTabIndex(newValue)}
-              sx={{ mt: 2, borderBottom: 1, borderColor: "divider" }}
+              sx={{
+                mt: 2,
+                borderBottom: 1,
+                borderColor: "divider",
+                "& .MuiTabs-flexContainer": {
+                  justifyContent: "space-between",
+                },
+              }}
             >
-              <Tab label="Recommendations" />
-              <Tab label="Goal ID" />
-              <Tab label="Clinical Priority" />
+              <Tab
+                label="Recommendations"
+                sx={{ width: "33%", alignItems: "flex-start" }}
+              />
+              <Tab
+                label="Goal ID"
+                sx={{ width: "33%", alignItems: "flex-start" }}
+              />
+              <Tab
+                label="Clinical Priority"
+                sx={{ width: "33%", alignItems: "flex-start" }}
+              />
             </Tabs>
 
             {/* Tab panels */}
-            <Box sx={{ flex: 1, overflowY: "auto", mt: 2 }}>
+            <Box
+              sx={{
+                flex: 1,
+                overflowY: "auto",
+                mt: 2,
+                borderBottom: "1px solid #ddd",
+              }}
+            >
               {tabIndex === 0 && (
                 <Typography>
                   {tabIndex === 0 && (
                     <Box>
                       <table
-                        style={{ width: "100%", borderCollapse: "collapse" }}
+                        style={{
+                          width: "100%",
+                          borderCollapse: "collapse",
+                          tableLayout: "fixed",
+                        }}
                       >
                         <thead>
                           <tr>
-                            <th style={{ textAlign: "left", padding: "8px" }}>
+                            <th
+                              style={{
+                                textAlign: "left",
+                                padding: "8px",
+                                width: "66%",
+                                paddingRight: 0,
+                              }}
+                            >
                               Recommendation
                             </th>
-                            <th style={{ textAlign: "left", padding: "8px" }}>
+                            <th
+                              style={{
+                                textAlign: "left",
+                                padding: "8px 8px 8px 16px",
+                              }}
+                            >
                               Weight
                             </th>
                           </tr>
@@ -549,8 +597,21 @@ function App() {
                         <tbody>
                           {draftRecommendations.map((row, index) => (
                             <tr key={row.label}>
-                              <td style={{ padding: "8px" }}>{row.label}</td>
-                              <td style={{ padding: "8px" }}>
+                              <td
+                                style={{
+                                  padding: "8px",
+                                  width: "66%",
+                                  paddingRight: 0,
+                                }}
+                              >
+                                {row.label}
+                              </td>
+                              <td
+                                style={{
+                                  padding: "8px 8px 8px 16px",
+                                  width: "20%",
+                                }}
+                              >
                                 <input
                                   type="number"
                                   value={row.weight}
@@ -572,10 +633,11 @@ function App() {
                                     );
                                   }}
                                   style={{
-                                    width: "100px",
                                     padding: "4px",
                                     borderRadius: "4px",
                                     border: "1px solid #ccc",
+                                    paddingRight: 0,
+                                    width: "50%",
                                   }}
                                 />
                               </td>
@@ -592,14 +654,30 @@ function App() {
                   {tabIndex === 1 && (
                     <Box>
                       <table
-                        style={{ width: "100%", borderCollapse: "collapse" }}
+                        style={{
+                          width: "100%",
+                          borderCollapse: "collapse",
+                          tableLayout: "fixed",
+                        }}
                       >
                         <thead>
                           <tr>
-                            <th style={{ textAlign: "left", padding: "8px" }}>
+                            <th
+                              style={{
+                                textAlign: "left",
+                                padding: "8px",
+                                width: "66%",
+                                paddingRight: 0,
+                              }}
+                            >
                               Goal ID
                             </th>
-                            <th style={{ textAlign: "left", padding: "8px" }}>
+                            <th
+                              style={{
+                                textAlign: "left",
+                                padding: "8px 8px 8px 16px",
+                              }}
+                            >
                               Goal Weight
                             </th>
                           </tr>
@@ -607,8 +685,21 @@ function App() {
                         <tbody>
                           {draftGoals.map((row, index) => (
                             <tr key={row.label}>
-                              <td style={{ padding: "8px" }}>{row.label}</td>
-                              <td style={{ padding: "8px" }}>
+                              <td
+                                style={{
+                                  padding: "8px",
+                                  width: "66%",
+                                  paddingRight: 0,
+                                }}
+                              >
+                                {row.label}
+                              </td>
+                              <td
+                                style={{
+                                  padding: "8px 8px 8px 16px",
+                                  width: "20%",
+                                }}
+                              >
                                 <input
                                   type="number"
                                   value={row.goalWeight}
@@ -633,10 +724,11 @@ function App() {
                                     );
                                   }}
                                   style={{
-                                    width: "100px",
                                     padding: "4px",
                                     borderRadius: "4px",
                                     border: "1px solid #ccc",
+                                    paddingRight: 0,
+                                    width: "50%",
                                   }}
                                 />
                               </td>
@@ -653,14 +745,30 @@ function App() {
                   {tabIndex === 2 && (
                     <Box>
                       <table
-                        style={{ width: "100%", borderCollapse: "collapse" }}
+                        style={{
+                          width: "100%",
+                          borderCollapse: "collapse",
+                          tableLayout: "fixed",
+                        }}
                       >
                         <thead>
                           <tr>
-                            <th style={{ textAlign: "left", padding: "8px" }}>
+                            <th
+                              style={{
+                                textAlign: "left",
+                                padding: "8px",
+                                width: "66%",
+                                paddingRight: 0,
+                              }}
+                            >
                               Clinical Priority
                             </th>
-                            <th style={{ textAlign: "left", padding: "8px" }}>
+                            <th
+                              style={{
+                                textAlign: "left",
+                                padding: "8px 8px 8px 16px",
+                              }}
+                            >
                               Priority Weight
                             </th>
                           </tr>
@@ -668,8 +776,21 @@ function App() {
                         <tbody>
                           {draftClinicalPriority.map((row, index) => (
                             <tr key={row.label}>
-                              <td style={{ padding: "8px" }}>{row.label}</td>
-                              <td style={{ padding: "8px" }}>
+                              <td
+                                style={{
+                                  padding: "8px",
+                                  width: "66%",
+                                  paddingRight: 0,
+                                }}
+                              >
+                                {row.label}
+                              </td>
+                              <td
+                                style={{
+                                  padding: "8px 8px 8px 16px",
+                                  width: "20%",
+                                }}
+                              >
                                 <input
                                   type="number"
                                   value={row.priorityWeight}
@@ -695,10 +816,11 @@ function App() {
                                     );
                                   }}
                                   style={{
-                                    width: "100px",
                                     padding: "4px",
                                     borderRadius: "4px",
                                     border: "1px solid #ccc",
+                                    paddingRight: 0,
+                                    width: "50%",
                                   }}
                                 />
                               </td>
@@ -717,7 +839,7 @@ function App() {
               sx={{
                 display: "flex",
                 justifyContent: "flex-end",
-                mt: 3,
+                marginTop: "75px",
                 gap: 2,
               }}
             >

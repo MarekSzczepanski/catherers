@@ -296,6 +296,16 @@ function App() {
     setModal(true);
   };
 
+  function arraysEqual<T>(a: T[], b: T[], key: keyof T): boolean {
+    if (a.length !== b.length) return false;
+    return a.every((item, i) => item[key] === b[i][key]);
+  }
+
+  const hasChanges =
+    !arraysEqual(draftRecommendations, recommendations, "weight") ||
+    !arraysEqual(draftClinicalPriority, clinicalPriority, "priorityWeight") ||
+    !arraysEqual(draftGoals, goals, "goalWeight");
+
   return (
     <Box sx={{ display: "flex", minHeight: "100vh" }}>
       <Box
@@ -720,12 +730,14 @@ function App() {
                   setModal(false);
                 }}
                 style={{
-                  background: "#6a1b9a",
+                  background: hasChanges ? "#6a1b9a" : "#ccc",
                   color: "white",
                   padding: "6px 16px",
                   borderRadius: "8px",
                   border: "none",
+                  cursor: hasChanges ? "pointer" : "not-allowed",
                 }}
+                disabled={!hasChanges}
               >
                 Recalculate
               </button>

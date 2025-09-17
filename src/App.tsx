@@ -102,7 +102,6 @@ function calculateScore(
             highest = result;
           } else {
             nonHighestRowsValues.push(result);
-            console.log(recommendationsObj);
           }
         }
         const nonHighestSum = nonHighestRowsValues.reduce(
@@ -113,7 +112,8 @@ function calculateScore(
         );
         const finalResult = highest + nonHighestSum * 0.5;
         newScore[f.data[0].id] = (newScore[f.data[0].id] ?? 0) + finalResult;
-        console.log(highest, nonHighestRowsValues);
+        if (f.data[0].id === "Full sleeve")
+          console.log(f.data[0].id, finalResult);
       } else {
         const recommendationsObj = recommendations.find(
           (r) => r.label === f.weight
@@ -132,6 +132,10 @@ function calculateScore(
         newScore[f.id] =
           (newScore[f.id] ?? 0) +
           recommendationsValue * clinicalPriorityValue * goalsValue;
+        console.log(
+          f.id,
+          recommendationsValue * clinicalPriorityValue * goalsValue
+        );
       }
     };
 
@@ -355,7 +359,7 @@ function App() {
               alignItems: "center",
             }}
           >
-            <RoundButton imageName="home" click={handleWeightEdit} />
+            <RoundButton imageName="edit" click={handleWeightEdit} />
             <RoundButton imageName="reset" click={handleReset} />
             <RoundButton imageName="download" click={handleDownload} />
           </Box>

@@ -369,7 +369,7 @@ function App() {
     // ---- Create workbook and append all sheets ----
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws1, "Scores");
-    XLSX.utils.book_append_sheet(wb, ws2, "Clicked Buttons");
+    XLSX.utils.book_append_sheet(wb, ws2, "Selected characteristics");
     XLSX.utils.book_append_sheet(wb, ws3, "Weights");
 
     // ---- Export workbook ----

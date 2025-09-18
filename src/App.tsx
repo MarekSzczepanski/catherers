@@ -21,6 +21,8 @@ import SideButton from "./components/side-button";
 import RoundButton from "./components/round-button";
 import { accordionContent } from "./data";
 import CloseIcon from "@mui/icons-material/Close";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 
 type Score = Record<string, number>;
 
@@ -112,8 +114,6 @@ function calculateScore(
         );
         const finalResult = highest + nonHighestSum * 0.5;
         newScore[f.data[0].id] = (newScore[f.data[0].id] ?? 0) + finalResult;
-        if (f.data[0].id === "Full sleeve")
-          console.log(f.data[0].id, finalResult);
       } else {
         const recommendationsObj = recommendations.find(
           (r) => r.label === f.weight
@@ -132,10 +132,6 @@ function calculateScore(
         newScore[f.id] =
           (newScore[f.id] ?? 0) +
           recommendationsValue * clinicalPriorityValue * goalsValue;
-        console.log(
-          f.id,
-          recommendationsValue * clinicalPriorityValue * goalsValue
-        );
       }
     };
 
@@ -291,8 +287,6 @@ function App() {
     setLockedButtons(new Set());
   };
 
-  const handleDownload = () => {};
-
   const handleWeightEdit = () => {
     setDraftRecommendations(recommendations.map((r) => ({ ...r }))); // clone
     setDraftClinicalPriority(clinicalPriority.map((r) => ({ ...r }))); // clone
@@ -309,6 +303,84 @@ function App() {
     !arraysEqual(draftRecommendations, recommendations, "weight") ||
     !arraysEqual(draftClinicalPriority, clinicalPriority, "priorityWeight") ||
     !arraysEqual(draftGoals, goals, "goalWeight");
+
+  const handleExport = () => {
+    // ---- First sheet: Scores ----
+    const rows = Object.entries(score)
+      .map(([key, value]) => ({ Feature: key, Value: value }))
+      .sort((a, b) => b.Value - a.Value); // sort descending by Value
+
+    const ws1 = XLSX.utils.json_to_sheet(rows);
+
+    // ---- Apply formatting to Scores sheet ----
+    const range = XLSX.utils.decode_range(ws1["!ref"] || "");
+    for (let R = range.s.r; R <= range.e.r; ++R) {
+      for (let C = range.s.c; C <= range.e.c; ++C) {
+        const cell_address = { c: C, r: R };
+        const cell_ref = XLSX.utils.encode_cell(cell_address);
+        if (!ws1[cell_ref]) continue;
+        if (R === 0) {
+          ws1[cell_ref].s = {
+            font: { bold: true },
+            alignment: { horizontal: "center" },
+          };
+        } else if (C === 1) {
+          ws1[cell_ref].t = "n"; // ensure numeric
+          ws1[cell_ref].z = "0.0"; // 1 decimal point
+          ws1[cell_ref].s = {
+            font: {
+              color: {
+                rgb: rows[R - 1].Value >= 0 ? "007700" : "FF0000", // use sorted row value
+              },
+            },
+          };
+        }
+      }
+    }
+
+    // ---- Second sheet: Clicked Buttons ----
+    const clickedRows = Array.from(clickedButtons).map((btn) => ({
+      Button: btn,
+    }));
+    const ws2 = XLSX.utils.json_to_sheet(clickedRows);
+    ws2["!cols"] = [{ wch: 30 }]; // widen column
+
+    // ---- Third sheet: Weights ----
+    const combinedRows = [
+      ...recommendations.map((r) => ({
+        Type: "Recommendation",
+        Label: r.label,
+        Weight: r.weight,
+      })),
+      ...clinicalPriority.map((c) => ({
+        Type: "Clinical Priority",
+        Label: c.label,
+        Weight: c.priorityWeight,
+      })),
+      ...goals.map((g) => ({
+        Type: "Goal",
+        Label: g.label,
+        Weight: g.goalWeight,
+      })),
+    ];
+    const ws3 = XLSX.utils.json_to_sheet(combinedRows);
+    ws3["!cols"] = [{ wch: 20 }, { wch: 40 }, { wch: 12 }]; // set column widths
+
+    // ---- Create workbook and append all sheets ----
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws1, "Scores");
+    XLSX.utils.book_append_sheet(wb, ws2, "Clicked Buttons");
+    XLSX.utils.book_append_sheet(wb, ws3, "Weights");
+
+    // ---- Export workbook ----
+    const excelBuffer = XLSX.write(wb, {
+      bookType: "xlsx",
+      type: "array",
+      cellStyles: true,
+    });
+    const blob = new Blob([excelBuffer], { type: "application/octet-stream" });
+    saveAs(blob, "file-test.xlsx");
+  };
 
   return (
     <Box sx={{ display: "flex", minHeight: "100vh" }}>
@@ -361,7 +433,7 @@ function App() {
           >
             <RoundButton imageName="edit" click={handleWeightEdit} />
             <RoundButton imageName="reset" click={handleReset} />
-            <RoundButton imageName="download" click={handleDownload} />
+            <RoundButton imageName="download" click={handleExport} />
           </Box>
         </Box>
 

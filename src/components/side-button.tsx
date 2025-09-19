@@ -9,7 +9,7 @@ const SideButton = () => {
         backgroundColor: "#F1D3F9",
         minWidth: 0,
         marginTop: "15%",
-        width: "70%",
+        width: "65%",
         aspectRatio: "1 / 1",
         boxShadow: "none",
         borderRadius: "16px",

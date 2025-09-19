@@ -555,7 +555,12 @@ function App() {
                             >
                               {key}
                               <span>
-                                <b className="required-b">Required</b>
+                                <b
+                                  data-value={String(value)}
+                                  className="required-b"
+                                >
+                                  Required
+                                </b>
                               </span>
                             </Typography>
                           ))}

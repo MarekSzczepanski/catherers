@@ -754,7 +754,7 @@ function App() {
             </Typography>
           </Box>
           <img
-            src="/blob.jpg"
+            src="/hero.png"
             alt="image"
             style={{
               maxWidth: "33%",

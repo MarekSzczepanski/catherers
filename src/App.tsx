@@ -1,6 +1,6 @@
 import "./App.css";
 import AccordionWrap from "./components/accordion-wrap";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Box,
   Typography,
@@ -185,6 +185,7 @@ const initialGoals = [
 
 function App() {
   const [score, setScore] = useState<Score>(initialScore);
+  useAlignRequiredAndNoB();
   const [clickedButtons, setClickedButtons] = useState<Set<string>>(new Set());
   const [lockedButtons, setLockedButtons] = useState<Set<string>>(new Set());
   const [modal, setModal] = useState<boolean>(false);
@@ -196,6 +197,40 @@ function App() {
     initialClinicalPriority
   );
   const [goals, setGoals] = useState(initialGoals);
+
+  const hey3Ref = useRef<HTMLDivElement>(null);
+  const hey4Ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function alignHeightsAndPosition() {
+      if (hey3Ref.current && hey4Ref.current) {
+        const hey4Height = hey4Ref.current.offsetHeight;
+        const parentTop =
+          hey3Ref.current.parentElement?.getBoundingClientRect().top ?? 0;
+        const hey4Top = hey4Ref.current.getBoundingClientRect().top;
+
+        const offset = hey4Top - parentTop;
+
+        // Set height & transform
+        hey3Ref.current.style.height = `${hey4Height}px`;
+        hey3Ref.current.style.transform = `translateY(${offset}px)`;
+
+        // Set opacity based on number of children
+        if (hey4Ref.current.children.length < 5) {
+          hey3Ref.current.style.opacity = "0";
+        } else {
+          hey3Ref.current.style.opacity = "1";
+        }
+      }
+    }
+
+    alignHeightsAndPosition();
+    window.addEventListener("resize", alignHeightsAndPosition);
+
+    return () => {
+      window.removeEventListener("resize", alignHeightsAndPosition);
+    };
+  }, [score]); // rerun when score changes
 
   // temporary edits live here
   const [draftRecommendations, setDraftRecommendations] = useState<
@@ -382,6 +417,38 @@ function App() {
     saveAs(blob, "file-test.xlsx");
   };
 
+  function useAlignRequiredAndNoB() {
+    useEffect(() => {
+      function updateMargins() {
+        // Find the maximum width of any .required-b element
+        const requiredWidths = Array.from(
+          document.querySelectorAll<HTMLElement>(".required-b")
+        ).map((el) => el.offsetWidth);
+
+        const maxRequiredWidth =
+          requiredWidths.length > 0 ? Math.max(...requiredWidths) : 0;
+
+        console.log(maxRequiredWidth);
+
+        // Apply marginLeft to every .no-b
+        document.querySelectorAll<HTMLElement>(".no-b").forEach((el) => {
+          console.log(el);
+          el.style.marginLeft = `${maxRequiredWidth + 24 - el.offsetWidth}px`;
+        });
+      }
+
+      // Run once on mount
+      updateMargins();
+
+      // Update on window resize
+      window.addEventListener("resize", updateMargins);
+
+      return () => {
+        window.removeEventListener("resize", updateMargins);
+      };
+    }, [score]);
+  }
+
   return (
     <Box sx={{ display: "flex", minHeight: "100vh" }}>
       <Box
@@ -389,7 +456,7 @@ function App() {
           position: "fixed", // keep fixed on scroll
           top: 0, // start from top
           left: 0, // align to left
-          width: "20%", // keep same width
+          width: "35%", // keep same width
           height: "100vh", // fill viewport height
           backgroundColor: "#F8F1F6",
           display: "flex",
@@ -398,11 +465,11 @@ function App() {
       >
         <Box
           sx={{
-            width: "35%",
+            width: "15%",
             borderRight: "1px solid #ddd",
             display: "flex",
             flexDirection: "column",
-            height: "calc(100vh - 32px)", // full viewport height
+            height: "100%", // full viewport height
             minHeight: 0, // allow flex children to shrink
             alignItems: "center",
           }}
@@ -429,6 +496,7 @@ function App() {
               mt: "auto", // push to bottom
               width: "100%",
               alignItems: "center",
+              paddingBottom: "32px",
             }}
           >
             <RoundButton imageName="edit" click={handleWeightEdit} />
@@ -444,67 +512,211 @@ function App() {
           <Box mt={5} sx={{ overflowWrap: "anywhere" }}>
             <Box mt={5} pb={2} sx={{ overflowWrap: "anywhere" }}>
               {/* Positive & Neutral results */}
-              {Object.entries(score)
-                .filter(([_, value]) => value > 0) // only show positive non-zero
-                .sort((a, b) => b[1] - a[1])
-                .map(([key, value]) => {
-                  const isHigh = value >= 100;
-                  return (
-                    <Typography
-                      key={key}
-                      sx={{
-                        padding: "2px 0",
-                        fontSize: "13px",
-                        display: "flex",
-                        justifyContent: "space-between",
-                        color: isHigh ? "#79AC78" : "inherit",
-                        "& span": {
-                          whiteSpace: "nowrap",
-                          paddingLeft: "8px",
-                        },
-                      }}
+              <Box sx={{ display: "flex", flexWrap: "wrap" }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    width: "100%",
+                    gap: 6,
+                    alignItems: "stretch",
+                  }}
+                >
+                  <Box
+                    className="hey2"
+                    sx={{
+                      flex: 1,
+                      display: "flex",
+                      flexDirection: "column",
+                      height: "100%",
+                    }}
+                  >
+                    <Box
+                      sx={{ display: "flex", flexDirection: "column", gap: 2 }}
                     >
-                      {key}
-                      <span>{isHigh ? <b>Required</b> : value.toFixed(1)}</span>
-                    </Typography>
-                  );
-                })}
+                      {/* High scores */}
+                      <Box className="required-scores-container">
+                        {Object.entries(score)
+                          .filter(([_, value]) => value > 0 && value >= 100)
+                          .sort((a, b) => b[1] - a[1])
+                          .map(([key, value]) => (
+                            <Typography
+                              key={key}
+                              sx={{
+                                padding: "2px 0",
+                                fontSize: "13px",
+                                display: "flex",
+                                justifyContent: "space-between",
+                                color: "#79AC78",
+                                "& span": {
+                                  whiteSpace: "nowrap",
+                                  paddingLeft: 3,
+                                },
+                              }}
+                            >
+                              {key}
+                              <span>
+                                <b className="required-b">Required</b>
+                              </span>
+                            </Typography>
+                          ))}
+                      </Box>
 
-              <Box mt={8}>
-                {Object.entries(score)
-                  .filter(([_, value]) => value < 0) // only negative
-                  .filter(([_, value]) => value !== 0) // skip zero
-                  .sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]))
-                  .map(([key, value]) => {
-                    const isVeryNegative = value <= -100;
-                    return (
-                      <Typography
-                        key={key}
-                        sx={{
-                          padding: "2px 0",
-                          fontSize: "13px",
-                          display: "flex",
-                          justifyContent: "space-between",
-                          color: "crimson",
-                          "& span": {
-                            whiteSpace: "nowrap",
-                            paddingLeft: "8px",
-                          },
-                        }}
-                      >
-                        {key}
-                        <span>
-                          {isVeryNegative ? <b>CI</b> : value.toFixed(1)}
-                        </span>
-                      </Typography>
-                    );
-                  })}
+                      {/* Non-high scores */}
+                      <Box className="hey4" ref={hey4Ref}>
+                        {Object.entries(score)
+                          .filter(([_, value]) => value > 0 && value < 100)
+                          .sort((a, b) => b[1] - a[1])
+                          .map(([key, value]) => (
+                            <Typography
+                              key={key}
+                              sx={{
+                                fontSize: "13px",
+                                display: "flex",
+                                justifyContent: "space-between",
+                                "& span": {
+                                  whiteSpace: "nowrap",
+                                  paddingLeft: 3,
+                                },
+                              }}
+                            >
+                              {key}
+                              <span className="no-b">{value.toFixed(1)}</span>
+                            </Typography>
+                          ))}
+                      </Box>
+                    </Box>
+                  </Box>
+
+                  <Box
+                    className="hey3"
+                    ref={hey3Ref}
+                    sx={{
+                      textAlign: "center",
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "space-between", // optional: distribute items evenly
+                    }}
+                  >
+                    <Typography sx={{ fontSize: "13px", color: "#969696" }}>
+                      Strongly
+                    </Typography>
+                    <Typography sx={{ fontSize: "13px", color: "#969696" }}>
+                      Prefer
+                    </Typography>
+
+                    {/* Triangle arrow stays at top */}
+                    <Box
+                      sx={{
+                        width: 0,
+                        height: 0,
+                        borderLeft: "3px solid transparent",
+                        borderRight: "3px solid transparent",
+                        borderBottom: `${Math.sqrt(3) * 3}px solid #969696`,
+                        margin: "5px auto 0",
+                      }}
+                    />
+
+                    {/* Vertical line stretches */}
+                    <Box
+                      sx={{
+                        width: "1px",
+                        flex: 1, // <--- grows to fill remaining height
+                        backgroundColor: "#969696",
+                        margin: "0 auto 5px",
+                      }}
+                    />
+
+                    <Typography sx={{ fontSize: "13px", color: "#969696" }}>
+                      Prefer
+                    </Typography>
+                  </Box>
+                </Box>
+
+                <Box
+                  mt={8}
+                  sx={{
+                    display: "flex",
+                    width: "100%",
+                    gap: 6,
+                    alignItems: "stretch",
+                  }}
+                >
+                  <Box
+                    className="hey2"
+                    sx={{
+                      flex: 1,
+                      display: "flex",
+                      flexDirection: "column",
+                      height: "100%",
+                    }}
+                  >
+                    {Object.entries(score)
+                      .filter(([_, value]) => value < 0) // only negative
+                      .filter(([_, value]) => value !== 0) // skip zero
+                      .sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]))
+                      .map(([key, value]) => {
+                        const isVeryNegative = value <= -100;
+                        return (
+                          <Typography
+                            key={key}
+                            sx={{
+                              padding: "2px 0",
+                              fontSize: "13px",
+                              display: "flex",
+                              justifyContent: "space-between",
+                              color: "crimson",
+                              "& span": {
+                                whiteSpace: "nowrap",
+                                paddingLeft: 3,
+                              },
+                            }}
+                          >
+                            {key}
+                            <span>
+                              {isVeryNegative ? <b>CI</b> : value.toFixed(1)}
+                            </span>
+                          </Typography>
+                        );
+                      })}
+                  </Box>
+                  <Box className="hey" sx={{ textAlign: "left", opacity: 0 }}>
+                    <Typography sx={{ fontSize: "13px", textAlign: "center" }}>
+                      Strongly
+                    </Typography>
+                    <Typography sx={{ fontSize: "13px", textAlign: "center" }}>
+                      Prefer
+                    </Typography>
+
+                    <Box
+                      sx={{
+                        width: "0",
+                        height: "0",
+                        borderLeft: "5px solid transparent",
+                        borderRight: "5px solid transparent",
+                        borderBottom: "5px solid black",
+                        margin: "0 auto",
+                      }}
+                    ></Box>
+                    <Box
+                      sx={{
+                        width: "1px",
+                        height: "100px",
+                        backgroundColor: "black",
+                        margin: "0 auto",
+                      }}
+                    ></Box>
+
+                    <Typography sx={{ fontSize: "13px", textAlign: "center" }}>
+                      Prefer
+                    </Typography>
+                  </Box>
+                </Box>
               </Box>
             </Box>
           </Box>
         </Box>
       </Box>
-      <Box p={1} sx={{ marginLeft: "20%" }}>
+      <Box p={1} sx={{ marginLeft: "35%" }}>
         <Box mb={3} sx={{ display: "flex" }}>
           <Box
             p={4}

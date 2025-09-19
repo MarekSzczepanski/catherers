@@ -9,7 +9,7 @@ const { type1, type2, type3 } = dropdownValueTypes;
 
 export const accordionContent: AccordionContent = [
   {
-    accordionName: "Q1 — Safety & basics (Tier-0 gates)",
+    accordionName: "Q1 - Sex at birth",
     data: [
       {
         group: "sex",
@@ -95,33 +95,10 @@ export const accordionContent: AccordionContent = [
           },
         ],
       },
-      {
-        text: "Neobladder",
-        features: [
-          {
-            id: "2-4 eyelets",
-            weight: "Require",
-            goalWeight: "debris_management",
-            priorityWeight: "High_clinical_effectiveness",
-          },
-          {
-            id: "Open-ended",
-            weight: "Require",
-            goalWeight: "debris_management",
-            priorityWeight: "High_clinical_effectiveness",
-          },
-          {
-            id: "Microhole eyelets",
-            weight: "Contraindicated",
-            goalWeight: "debris_management",
-            priorityWeight: "High_clinical_effectiveness",
-          },
-        ],
-      },
     ],
   },
   {
-    accordionName: "Q2 — Anatomy & passage (structural/pathway issues)",
+    accordionName: "Q2 - Medical history (Select any that apply)",
     data: [
       {
         text: "Stricture",
@@ -147,7 +124,7 @@ export const accordionContent: AccordionContent = [
         ],
       },
       {
-        text: "BPH",
+        text: "Enlarged prostate (BPH)",
         features: [
           {
             isMultipleRow: true,
@@ -207,7 +184,7 @@ export const accordionContent: AccordionContent = [
         ],
       },
       {
-        text: "Tortuous urethra",
+        text: "Curved / tortuous urethra",
         features: [
           {
             id: "More Rigid Core",
@@ -236,7 +213,7 @@ export const accordionContent: AccordionContent = [
         ],
       },
       {
-        text: "Pelvic prolapse",
+        text: "Pelvic organ prolapse",
         features: [
           {
             id: "More Rigid Core",
@@ -255,7 +232,7 @@ export const accordionContent: AccordionContent = [
         ],
       },
       {
-        text: "False passage",
+        text: "Previous false passage",
         features: [
           {
             id: "More Rigid Core",
@@ -265,98 +242,31 @@ export const accordionContent: AccordionContent = [
           },
         ],
       },
-    ],
-  },
-  {
-    accordionName: "Q3 — Infection, drainage & debris risk",
-    data: [
       {
-        group: "recurrent UTIs",
-        questions: type2.map((x) => ({
-          text: `Recurrent UTIs: ${x}`,
-          features: [
-            {
-              id: "Bag sleeve",
-              requiredScale: 1,
-              weight: "Prefer",
-              goalWeight: "infection_risk_reduction",
-              priorityWeight: "Medium_comfort_easeofuse",
-            },
-            {
-              id: "Introducer tips",
-              requiredScale: 1,
-              weight: "Strongly prefer",
-              goalWeight: "infection_risk_reduction",
-              priorityWeight: "High_clinical_effectiveness",
-            },
-            {
-              id: "Pre-lubricate",
-              requiredScale: 1,
-              weight: "Neutral",
-              goalWeight: "infection_risk_reduction",
-              priorityWeight: "High_clinical_effectiveness",
-            }, //
-            {
-              id: "Hydrophillic coated",
-              requiredScale: 1,
-              weight: "Strongly prefer",
-              goalWeight: "infection_risk_reduction",
-              priorityWeight: "High_clinical_effectiveness",
-            },
-            {
-              id: "IAS (integrated ampiphillic surfactant)",
-              requiredScale: 1,
-              weight: "Prefer",
-              goalWeight: "infection_risk_reduction",
-              priorityWeight: "High_clinical_effectiveness",
-            },
-            {
-              id: "2-4 eyelets",
-              requiredScale: 1,
-              weight: "Neutral",
-              goalWeight: "infection_risk_reduction",
-              priorityWeight: "High_clinical_effectiveness",
-            }, //
-            {
-              id: "Complete/closed system",
-              requiredScale: 2,
-              weight: "Strongly prefer",
-              goalWeight: "infection_risk_reduction",
-              priorityWeight: "High_clinical_effectiveness",
-            },
-            {
-              id: "Full sleeve",
-              requiredScale: 1,
-              weight: "Prefer",
-              goalWeight: "infection_risk_reduction",
-              priorityWeight: "Medium_comfort_easeofuse",
-            },
-            {
-              id: "Partial sleeve",
-              requiredScale: 1,
-              weight: "Prefer",
-              goalWeight: "infection_risk_reduction",
-              priorityWeight: "Medium_comfort_easeofuse",
-            },
-            {
-              id: "Manual lubrication",
-              requiredScale: 1,
-              weight: "Avoid",
-              goalWeight: "infection_risk_reduction",
-              priorityWeight: "High_clinical_effectiveness",
-            },
-            {
-              id: "Microhole eyelets",
-              requiredScale: 1,
-              weight: "Neutral",
-              goalWeight: "infection_risk_reduction",
-              priorityWeight: "High_clinical_effectiveness",
-            }, //
-          ],
-        })),
+        text: "Bladder reconstruction (Neobladder)",
+        features: [
+          {
+            id: "2-4 eyelets",
+            weight: "Require",
+            goalWeight: "debris_management",
+            priorityWeight: "High_clinical_effectiveness",
+          },
+          {
+            id: "Open-ended",
+            weight: "Require",
+            goalWeight: "debris_management",
+            priorityWeight: "High_clinical_effectiveness",
+          },
+          {
+            id: "Microhole eyelets",
+            weight: "Contraindicated",
+            goalWeight: "debris_management",
+            priorityWeight: "High_clinical_effectiveness",
+          },
+        ],
       },
       {
-        text: "Immunosupression",
+        text: "Low immunity (immunosupression)",
         features: [
           {
             id: "Complete/closed system",
@@ -367,68 +277,7 @@ export const accordionContent: AccordionContent = [
         ],
       },
       {
-        text: "Trouble fully draining (due to external anatomy)",
-        features: [
-          {
-            id: "Female Length+",
-            weight: "Prefer",
-            goalWeight: "anatomical_fit",
-            priorityWeight: "High_clinical_effectiveness",
-            gate: "F",
-          },
-        ],
-      },
-      {
-        group: "Sediment, mucus, or visible particles",
-        questions: type3.map((x) => ({
-          text: `Sediment, mucus, or visible particles: ${x}`,
-          features: [
-            {
-              id: "2-4 eyelets",
-              requiredScale: 1,
-              weight: "Strongly prefer",
-              goalWeight: "debris_management",
-              priorityWeight: "High_clinical_effectiveness",
-            },
-            {
-              id: "Microhole eyelets",
-              requiredScale: 1,
-              weight: "Contraindicated",
-              goalWeight: "debris_management",
-              priorityWeight: "Medium_comfort_easeofuse",
-            },
-          ],
-        })),
-      },
-      {
-        group: "Incomplete emptying",
-        questions: type1.map((x) => ({
-          text: `Incomplete emptying: ${x}`,
-          features: [
-            {
-              id: "Microhole eyelets",
-              requiredScale: 1,
-              weight: "Prefer",
-              goalWeight: "Improved_drainage",
-              priorityWeight: "Low_convenience_lifestyle",
-            },
-            {
-              id: "2-4 eyelets",
-              requiredScale: 1,
-              weight: "Prefer",
-              goalWeight: "Improved_drainage",
-              priorityWeight: "Low_convenience_lifestyle",
-            },
-          ],
-        })),
-      },
-    ],
-  },
-  {
-    accordionName: "Q4 — Neuro / sensation",
-    data: [
-      {
-        text: "SCI",
+        text: "Spinal cord injury",
         features: [
           {
             id: "Straight tips",
@@ -445,7 +294,7 @@ export const accordionContent: AccordionContent = [
         ],
       },
       {
-        text: "Early SCI",
+        text: "Early Spinal Cord Injury (within 1 year)",
         features: [
           {
             id: "Microhole eyelets",
@@ -456,7 +305,7 @@ export const accordionContent: AccordionContent = [
         ],
       },
       {
-        text: "Neuropathic bladder",
+        text: "Nerve Bladder problem (Neuropathic Bladder)",
         features: [
           {
             id: "2-4 eyelets",
@@ -466,6 +315,43 @@ export const accordionContent: AccordionContent = [
           }, //
         ],
       },
+      {
+        text: "Wheelchair use (female)",
+        features: [
+          {
+            id: "Male Length",
+            weight: "Prefer",
+            goalWeight: "ease_of_use_dexterity",
+            priorityWeight: "Medium_comfort_easeofuse",
+            gate: "F",
+          },
+          {
+            id: "Complete/closed system",
+            weight: "Prefer",
+            goalWeight: "ease_of_use_dexterity",
+            priorityWeight: "Medium_comfort_easeofuse",
+            gate: "F",
+          },
+        ],
+      },
+      {
+        text: "Wheelchair use (male)",
+        features: [
+          {
+            id: "Complete/closed system",
+            weight: "Prefer",
+            goalWeight: "ease_of_use_dexterity",
+            priorityWeight: "Medium_comfort_easeofuse",
+            gate: "M",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    accordionName:
+      "Q3 - Reduced sensitivity in your pubic area (how would you describe it?)",
+    data: [
       {
         group: "Reduced sensitivity",
         questions: type1.map((x) => ({
@@ -491,181 +377,13 @@ export const accordionContent: AccordionContent = [
     ],
   },
   {
-    accordionName: "Q5 — Symptoms during use (insertion/withdrawal)",
+    accordionName:
+      "Q4 - Manual dexterity + reach | how would you describe your hand use? (Select any that apply)",
     data: [
       {
-        group: "Pain/discomfort",
+        group: "Manual dexterity",
         questions: type1.map((x) => ({
-          text: `Pain/discomfort: ${x}`,
-          features: [
-            {
-              id: "Less Rigid Core",
-              requiredScale: 1,
-              weight: "Prefer",
-              goalWeight: "trauma_minimization",
-              priorityWeight: "Medium_comfort_easeofuse",
-            },
-            {
-              id: "Hydrophillic coated",
-              requiredScale: 1,
-              weight: "Prefer",
-              goalWeight: "trauma_minimization",
-              priorityWeight: "Medium_comfort_easeofuse",
-            },
-            {
-              id: "IAS (integrated ampiphillic surfactant)",
-              requiredScale: 1,
-              weight: "Prefer",
-              goalWeight: "trauma_minimization",
-              priorityWeight: "Medium_comfort_easeofuse",
-            },
-            {
-              id: "Smaller Diameter",
-              requiredScale: 1,
-              weight: "Neutral",
-              goalWeight: "trauma_minimization",
-              priorityWeight: "Medium_comfort_easeofuse",
-            }, //
-            {
-              id: "Smoothed eyelets",
-              requiredScale: 1,
-              weight: "Strongly prefer",
-              goalWeight: "trauma_minimization",
-              priorityWeight: "Medium_comfort_easeofuse",
-            },
-            {
-              id: "More Rigid Core",
-              requiredScale: 1,
-              weight: "Avoid",
-              goalWeight: "trauma_minimization",
-              priorityWeight: "Medium_comfort_easeofuse",
-            },
-            {
-              id: "Pre-lubricate",
-              requiredScale: 1,
-              weight: "Neutral",
-              goalWeight: "trauma_minimization",
-              priorityWeight: "Medium_comfort_easeofuse",
-            }, //
-            {
-              id: "Manual lubrication",
-              requiredScale: 1,
-              weight: "Neutral",
-              goalWeight: "trauma_minimization",
-              priorityWeight: "Medium_comfort_easeofuse",
-            }, //
-            {
-              id: "Wider diameter",
-              requiredScale: 1,
-              weight: "Neutral",
-              goalWeight: "trauma_minimization",
-              priorityWeight: "Medium_comfort_easeofuse",
-            }, //
-            {
-              id: "2-4 eyelets",
-              requiredScale: 1,
-              weight: "Neutral",
-              goalWeight: "trauma_minimization",
-              priorityWeight: "Medium_comfort_easeofuse",
-            }, //
-          ],
-        })),
-      },
-      {
-        group: "Sticking or dragging",
-        questions: type1.map((x) => ({
-          text: `Sticking or dragging: ${x}`,
-          features: [
-            {
-              id: "IAS (integrated ampiphillic surfactant)",
-              requiredScale: 1,
-              weight: "Strongly prefer",
-              goalWeight: "trauma_minimization",
-              priorityWeight: "High_clinical_effectiveness",
-            },
-            {
-              id: "Hydrophillic coated",
-              requiredScale: 1,
-              weight: "Avoid",
-              goalWeight: "trauma_minimization",
-              priorityWeight: "High_clinical_effectiveness",
-            }, //
-          ],
-        })),
-      },
-      {
-        group: "Bleeding",
-        questions: type1.map((x) => ({
-          text: `Bleeding: ${x}`,
-          features: [
-            {
-              id: "Smoothed eyelets",
-              requiredScale: 1,
-              weight: "Strongly prefer",
-              goalWeight: "trauma_minimization",
-              priorityWeight: "High_clinical_effectiveness",
-            },
-            {
-              id: "Less Rigid Core",
-              requiredScale: 1,
-              weight: "Prefer",
-              goalWeight: "trauma_minimization",
-              priorityWeight: "High_clinical_effectiveness",
-            },
-            {
-              id: "Hydrophillic coated",
-              requiredScale: 1,
-              weight: "Prefer",
-              goalWeight: "trauma_minimization",
-              priorityWeight: "High_clinical_effectiveness",
-            },
-            {
-              id: "IAS (integrated ampiphillic surfactant)",
-              requiredScale: 1,
-              weight: "Strongly prefer",
-              goalWeight: "trauma_minimization",
-              priorityWeight: "High_clinical_effectiveness",
-            },
-            {
-              id: "More Rigid Core",
-              requiredScale: 1,
-              weight: "Avoid",
-              goalWeight: "trauma_minimization",
-              priorityWeight: "High_clinical_effectiveness",
-            },
-            {
-              id: "Pre-lubricate",
-              requiredScale: 1,
-              weight: "Neutral",
-              goalWeight: "trauma_minimization",
-              priorityWeight: "High_clinical_effectiveness",
-            }, //
-            {
-              id: "2-4 eyelets",
-              requiredScale: 1,
-              weight: "Strongly prefer",
-              goalWeight: "trauma_minimization",
-              priorityWeight: "High_clinical_effectiveness",
-            },
-            {
-              id: "Microhole eyelets",
-              requiredScale: 1,
-              weight: "Neutral",
-              goalWeight: "trauma_minimization",
-              priorityWeight: "High_clinical_effectiveness",
-            }, //
-          ],
-        })),
-      },
-    ],
-  },
-  {
-    accordionName: "Q6 — Dexterity, cognition & support",
-    data: [
-      {
-        group: "Poor dexterity",
-        questions: type1.map((x) => ({
-          text: `Poor dexterity: ${x}`,
+          text: `Manual dexterity: ${x}`,
           features: [
             {
               id: "Female Length+",
@@ -765,38 +483,7 @@ export const accordionContent: AccordionContent = [
         })),
       },
       {
-        text: "Wheelchair use (female)",
-        features: [
-          {
-            id: "Male Length",
-            weight: "Prefer",
-            goalWeight: "ease_of_use_dexterity",
-            priorityWeight: "Medium_comfort_easeofuse",
-            gate: "F",
-          },
-          {
-            id: "Complete/closed system",
-            weight: "Prefer",
-            goalWeight: "ease_of_use_dexterity",
-            priorityWeight: "Medium_comfort_easeofuse",
-            gate: "F",
-          },
-        ],
-      },
-      {
-        text: "Wheelchair use (male)",
-        features: [
-          {
-            id: "Complete/closed system",
-            weight: "Prefer",
-            goalWeight: "ease_of_use_dexterity",
-            priorityWeight: "Medium_comfort_easeofuse",
-            gate: "M",
-          },
-        ],
-      },
-      {
-        text: "Trouble reaching genitals",
+        text: "Hard to see or reach urethra",
         features: [
           {
             id: "Male Length",
@@ -807,8 +494,319 @@ export const accordionContent: AccordionContent = [
           },
         ],
       },
+    ],
+  },
+  {
+    accordionName:
+      "Q5 - Have you catheterised before? (If so, select any that apply)",
+    data: [
       {
-        text: "First time or inexperienced",
+        group: "Pain or discomfort during use",
+        questions: type1.map((x) => ({
+          text: `Pain or discomfort during use: ${x}`,
+          features: [
+            {
+              id: "Less Rigid Core",
+              requiredScale: 1,
+              weight: "Prefer",
+              goalWeight: "trauma_minimization",
+              priorityWeight: "Medium_comfort_easeofuse",
+            },
+            {
+              id: "Hydrophillic coated",
+              requiredScale: 1,
+              weight: "Prefer",
+              goalWeight: "trauma_minimization",
+              priorityWeight: "Medium_comfort_easeofuse",
+            },
+            {
+              id: "IAS (integrated ampiphillic surfactant)",
+              requiredScale: 1,
+              weight: "Prefer",
+              goalWeight: "trauma_minimization",
+              priorityWeight: "Medium_comfort_easeofuse",
+            },
+            {
+              id: "Smaller Diameter",
+              requiredScale: 1,
+              weight: "Neutral",
+              goalWeight: "trauma_minimization",
+              priorityWeight: "Medium_comfort_easeofuse",
+            }, //
+            {
+              id: "Smoothed eyelets",
+              requiredScale: 1,
+              weight: "Strongly prefer",
+              goalWeight: "trauma_minimization",
+              priorityWeight: "Medium_comfort_easeofuse",
+            },
+            {
+              id: "More Rigid Core",
+              requiredScale: 1,
+              weight: "Avoid",
+              goalWeight: "trauma_minimization",
+              priorityWeight: "Medium_comfort_easeofuse",
+            },
+            {
+              id: "Pre-lubricate",
+              requiredScale: 1,
+              weight: "Neutral",
+              goalWeight: "trauma_minimization",
+              priorityWeight: "Medium_comfort_easeofuse",
+            }, //
+            {
+              id: "Manual lubrication",
+              requiredScale: 1,
+              weight: "Neutral",
+              goalWeight: "trauma_minimization",
+              priorityWeight: "Medium_comfort_easeofuse",
+            }, //
+            {
+              id: "Wider diameter",
+              requiredScale: 1,
+              weight: "Neutral",
+              goalWeight: "trauma_minimization",
+              priorityWeight: "Medium_comfort_easeofuse",
+            }, //
+            {
+              id: "2-4 eyelets",
+              requiredScale: 1,
+              weight: "Neutral",
+              goalWeight: "trauma_minimization",
+              priorityWeight: "Medium_comfort_easeofuse",
+            }, //
+          ],
+        })),
+      },
+      {
+        group: "Sticking or dragging on withdrawal",
+        questions: type1.map((x) => ({
+          text: `Sticking or dragging on withdrawal: ${x}`,
+          features: [
+            {
+              id: "IAS (integrated ampiphillic surfactant)",
+              requiredScale: 1,
+              weight: "Strongly prefer",
+              goalWeight: "trauma_minimization",
+              priorityWeight: "High_clinical_effectiveness",
+            },
+            {
+              id: "Hydrophillic coated",
+              requiredScale: 1,
+              weight: "Avoid",
+              goalWeight: "trauma_minimization",
+              priorityWeight: "High_clinical_effectiveness",
+            }, //
+          ],
+        })),
+      },
+      {
+        group: "Bleeding during use",
+        questions: type1.map((x) => ({
+          text: `Bleeding during use: ${x}`,
+          features: [
+            {
+              id: "Smoothed eyelets",
+              requiredScale: 1,
+              weight: "Strongly prefer",
+              goalWeight: "trauma_minimization",
+              priorityWeight: "High_clinical_effectiveness",
+            },
+            {
+              id: "Less Rigid Core",
+              requiredScale: 1,
+              weight: "Prefer",
+              goalWeight: "trauma_minimization",
+              priorityWeight: "High_clinical_effectiveness",
+            },
+            {
+              id: "Hydrophillic coated",
+              requiredScale: 1,
+              weight: "Prefer",
+              goalWeight: "trauma_minimization",
+              priorityWeight: "High_clinical_effectiveness",
+            },
+            {
+              id: "IAS (integrated ampiphillic surfactant)",
+              requiredScale: 1,
+              weight: "Strongly prefer",
+              goalWeight: "trauma_minimization",
+              priorityWeight: "High_clinical_effectiveness",
+            },
+            {
+              id: "More Rigid Core",
+              requiredScale: 1,
+              weight: "Avoid",
+              goalWeight: "trauma_minimization",
+              priorityWeight: "High_clinical_effectiveness",
+            },
+            {
+              id: "Pre-lubricate",
+              requiredScale: 1,
+              weight: "Neutral",
+              goalWeight: "trauma_minimization",
+              priorityWeight: "High_clinical_effectiveness",
+            }, //
+            {
+              id: "2-4 eyelets",
+              requiredScale: 1,
+              weight: "Strongly prefer",
+              goalWeight: "trauma_minimization",
+              priorityWeight: "High_clinical_effectiveness",
+            },
+            {
+              id: "Microhole eyelets",
+              requiredScale: 1,
+              weight: "Neutral",
+              goalWeight: "trauma_minimization",
+              priorityWeight: "High_clinical_effectiveness",
+            }, //
+          ],
+        })),
+      },
+      {
+        group: "recurrent UTIs",
+        questions: type2.map((x) => ({
+          text: `Recurrent UTIs: ${x}`,
+          features: [
+            {
+              id: "Bag sleeve",
+              requiredScale: 1,
+              weight: "Prefer",
+              goalWeight: "infection_risk_reduction",
+              priorityWeight: "Medium_comfort_easeofuse",
+            },
+            {
+              id: "Introducer tips",
+              requiredScale: 1,
+              weight: "Strongly prefer",
+              goalWeight: "infection_risk_reduction",
+              priorityWeight: "High_clinical_effectiveness",
+            },
+            {
+              id: "Pre-lubricate",
+              requiredScale: 1,
+              weight: "Neutral",
+              goalWeight: "infection_risk_reduction",
+              priorityWeight: "High_clinical_effectiveness",
+            }, //
+            {
+              id: "Hydrophillic coated",
+              requiredScale: 1,
+              weight: "Strongly prefer",
+              goalWeight: "infection_risk_reduction",
+              priorityWeight: "High_clinical_effectiveness",
+            },
+            {
+              id: "IAS (integrated ampiphillic surfactant)",
+              requiredScale: 1,
+              weight: "Prefer",
+              goalWeight: "infection_risk_reduction",
+              priorityWeight: "High_clinical_effectiveness",
+            },
+            {
+              id: "2-4 eyelets",
+              requiredScale: 1,
+              weight: "Neutral",
+              goalWeight: "infection_risk_reduction",
+              priorityWeight: "High_clinical_effectiveness",
+            }, //
+            {
+              id: "Complete/closed system",
+              requiredScale: 2,
+              weight: "Strongly prefer",
+              goalWeight: "infection_risk_reduction",
+              priorityWeight: "High_clinical_effectiveness",
+            },
+            {
+              id: "Full sleeve",
+              requiredScale: 1,
+              weight: "Prefer",
+              goalWeight: "infection_risk_reduction",
+              priorityWeight: "Medium_comfort_easeofuse",
+            },
+            {
+              id: "Partial sleeve",
+              requiredScale: 1,
+              weight: "Prefer",
+              goalWeight: "infection_risk_reduction",
+              priorityWeight: "Medium_comfort_easeofuse",
+            },
+            {
+              id: "Manual lubrication",
+              requiredScale: 1,
+              weight: "Avoid",
+              goalWeight: "infection_risk_reduction",
+              priorityWeight: "High_clinical_effectiveness",
+            },
+            {
+              id: "Microhole eyelets",
+              requiredScale: 1,
+              weight: "Neutral",
+              goalWeight: "infection_risk_reduction",
+              priorityWeight: "High_clinical_effectiveness",
+            }, //
+          ],
+        })),
+      },
+      {
+        group: "Sediment, mucus, or visible particles",
+        questions: type3.map((x) => ({
+          text: `Sediment, mucus, or visible particles: ${x}`,
+          features: [
+            {
+              id: "2-4 eyelets",
+              requiredScale: 1,
+              weight: "Strongly prefer",
+              goalWeight: "debris_management",
+              priorityWeight: "High_clinical_effectiveness",
+            },
+            {
+              id: "Microhole eyelets",
+              requiredScale: 1,
+              weight: "Contraindicated",
+              goalWeight: "debris_management",
+              priorityWeight: "Medium_comfort_easeofuse",
+            },
+          ],
+        })),
+      },
+      {
+        group: "Incomplete emptying",
+        questions: type1.map((x) => ({
+          text: `Incomplete emptying: ${x}`,
+          features: [
+            {
+              id: "Microhole eyelets",
+              requiredScale: 1,
+              weight: "Prefer",
+              goalWeight: "Improved_drainage",
+              priorityWeight: "Low_convenience_lifestyle",
+            },
+            {
+              id: "2-4 eyelets",
+              requiredScale: 1,
+              weight: "Prefer",
+              goalWeight: "Improved_drainage",
+              priorityWeight: "Low_convenience_lifestyle",
+            },
+          ],
+        })),
+      },
+      {
+        text: "Difficulty emptying (despite feeling 'all the way in')",
+        features: [
+          {
+            id: "Female Length+",
+            weight: "Prefer",
+            goalWeight: "anatomical_fit",
+            priorityWeight: "High_clinical_effectiveness",
+            gate: "F",
+          },
+        ],
+      },
+      {
+        text: "This is my first time / I’m still inexperienced",
         features: [
           {
             id: "Less Rigid Core",
@@ -845,10 +843,10 @@ export const accordionContent: AccordionContent = [
     ],
   },
   {
-    accordionName: "Q7 — Lifestyle, constraints & environment",
+    accordionName: "Q6 - Your lifestyle and preferences",
     data: [
       {
-        text: "Active / on the go",
+        text: "I am active / on the go",
         features: [
           {
             id: "Compact or pocket size",
@@ -961,7 +959,7 @@ export const accordionContent: AccordionContent = [
         ],
       },
       {
-        text: "Discretion",
+        text: "I value discretion",
         features: [
           {
             id: "Female Length",
@@ -999,7 +997,7 @@ export const accordionContent: AccordionContent = [
         ],
       },
       {
-        text: "Convenience",
+        text: "I value convenience",
         features: [
           {
             id: "Compact or pocket size",

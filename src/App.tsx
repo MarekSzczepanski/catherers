@@ -740,14 +740,12 @@ function App() {
           >
             <Typography
               variant="h1"
-              sx={{ fontSize: "80px", textAlign: "left", fontWeight: 600 }}
+              sx={{ fontSize: "60px", textAlign: "left", fontWeight: 600 }}
             >
-              Catheter Selection Tool
+              Intermittent Catheter Selection Tool
             </Typography>
             <Typography mt={2} sx={{ textAlign: "left" }}>
-              The purpose of this prototype is to verify correct feature
-              prioritization. Enter your medical attributes below, and a
-              prioritised cathetrer feature list will be calculated on the left.
+              For personalized, confident selection of intermittent catheters.
             </Typography>
           </Box>
           <img

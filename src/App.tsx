@@ -456,9 +456,9 @@ function App() {
           position: "fixed", // keep fixed on scroll
           top: 0, // start from top
           left: 0, // align to left
-          width: "35%", // keep same width
+          width: "30%", // keep same width
           height: "100vh", // fill viewport height
-          backgroundColor: "#F8F1F6",
+          backgroundColor: "#F2ECEE",
           display: "flex",
           overflowY: "auto", // allow scrolling inside box if content overflows
         }}
@@ -673,11 +673,20 @@ function App() {
                           >
                             {key}
                             <span>
-                              {isVeryNegative ? <b>CI</b> : value.toFixed(1)}
+                              {isVeryNegative ? <b>CI*</b> : value.toFixed(1)}
                             </span>
                           </Typography>
                         );
                       })}
+
+                    {Object.values(score).some((v) => v < 0) && (
+                      <Typography
+                        mt={"75px"}
+                        sx={{ color: "crimson", fontSize: "13px" }}
+                      >
+                        *Ci = Contraindication
+                      </Typography>
+                    )}
                   </Box>
                   <Box className="hey" sx={{ textAlign: "left", opacity: 0 }}>
                     <Typography sx={{ fontSize: "13px", textAlign: "center" }}>
@@ -716,7 +725,7 @@ function App() {
           </Box>
         </Box>
       </Box>
-      <Box p={1} sx={{ marginLeft: "35%" }}>
+      <Box p={1} sx={{ marginLeft: "30%" }}>
         <Box mb={3} sx={{ display: "flex" }}>
           <Box
             p={4}

@@ -245,16 +245,12 @@ function App() {
 
   const lockRelations: Record<string, string[]> = {
     "male at birth": [
-      "pelvic prolapse",
-      "obesity / body habitus: none",
-      "obesity / body habitus: mild",
-      "obesity / body habitus: moderate",
-      "obesity / body habitus: severe",
+      "pelvic organ prolapse",
       "wheelchair use (female)",
-      "trouble reaching genitals",
-      "trouble fully draining (due to external anatomy)",
+      "hard to see or reach urethra",
+      "difficulty emptying (despite feeling 'all the way in')",
     ],
-    "female at birth": ["bph", "wheelchair use (male)"],
+    "female at birth": ["enlarged prostate (bph)", "wheelchair use (male)"],
   };
 
   const handleClick = (buttonText: string) => {
@@ -297,6 +293,7 @@ function App() {
     setClickedButtons(
       new Set([...newClicked].filter((x) => !buttonsToLock.has(x)))
     );
+    console.log(buttonsToLock);
     setLockedButtons(buttonsToLock);
   };
 
